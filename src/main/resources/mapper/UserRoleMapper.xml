@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqns.demo.dao.mapper.UserRoleMapper">
+  <resultMap id="BaseResultMap" type="com.cqns.demo.dao.entity.UserRole">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="role_id" jdbcType="BIGINT" property="roleId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="raw_update_time" jdbcType="TIMESTAMP" property="rawUpdateTime" />
+    <result column="raw_add_time" jdbcType="TIMESTAMP" property="rawAddTime" />
+  </resultMap>
+</mapper>
