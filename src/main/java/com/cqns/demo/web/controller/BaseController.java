@@ -51,7 +51,7 @@ public class BaseController {
                     ResultInfo.create().success().setMsg("更新成功") :
                     ResultInfo.create().fail("更新失败");
         }catch (Exception e){
-            logger.error("ErrorError", e);
+            logger.error("Error", e);
             throw new RuntimeException(e.getCause());
         }
     }
