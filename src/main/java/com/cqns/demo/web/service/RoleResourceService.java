@@ -2,99 +2,126 @@ package com.cqns.demo.web.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.cqns.demo.baseMap.MyBaseMapper;
+import com.cqns.demo.dao.repository.RoleResourceRepository;
+import com.cqns.demo.dao.baserepository.BaseRepository;
 import com.cqns.demo.dao.entity.RoleResource;
-import com.cqns.demo.dao.mapper.RoleResourceMapper;
 import com.cqns.demo.web.vo.RoleResourceVo;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
-public class RoleResourceService extends AbstractCommonService<RoleResource> {
+public class RoleResourceService  extends AbstractCommonService<RoleResource>{
     private static Logger logger = LoggerFactory.getLogger(RoleResourceService.class);
     @Resource
-    private RoleResourceMapper roleResourceMapper;
-    @Override
-    protected MyBaseMapper<RoleResource> mapper() {
-        return this.roleResourceMapper;
-    }
+    private RoleResourceRepository roleResourceRepository;
 
     public List<RoleResourceVo> roleResourceVos(RoleResourceVo roleResourceVo){
 
-        Example example = new Example(RoleResource.class);
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        example.orderBy("rawUpdateTime").desc();
+            List<Predicate> predicates = Lists.newArrayList();
 
-        Example.Criteria criteria = example.createCriteria();
+            if (!Strings.isNullOrEmpty(roleResourceVo.getResourceName())){
 
-        if (!Strings.isNullOrEmpty(roleResourceVo.getResourceName())){
+                predicates.add(criteriaBuilder.like(root.get("resourceName"),"%" + roleResourceVo.getResourceName() + "%"));
 
-            criteria.andLike("resourceName","%" + roleResourceVo.getResourceName() + "%");
+            }
 
-        }
+            if (!Strings.isNullOrEmpty(String.valueOf(roleResourceVo.getRoleId()))){
 
-        if (!Strings.isNullOrEmpty(String.valueOf(roleResourceVo.getRoleId()))){
+                predicates.add(criteriaBuilder.equal(root.get("roleId"), roleResourceVo.getRoleId()));
 
-            criteria.andEqualTo("roleId", roleResourceVo.getRoleId());
+            }
 
-        }
+            if (Objects.nonNull(roleResourceVo.getResourceType())){
 
-        if (!Strings.isNullOrEmpty(String.valueOf(roleResourceVo.getResourceType()))){
+                predicates.add(criteriaBuilder.equal(root.get("resourceType"), roleResourceVo.getResourceType()));
 
-            criteria.andEqualTo("resourceType", roleResourceVo.getResourceType());
+            }
 
-        }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 
+        };
 
-        List<RoleResource> roleResources = this.list(example);
+        List<RoleResource> roleResources = this.roleResourceRepository.findAll(specification);
 
         return JSON.parseObject(JSON.toJSONString(roleResources), new TypeReference<List<RoleResourceVo>>(){}.getType());
     }
 
-    public PageInfo<RoleResourceVo> roleResourceVoPageInfo(RoleResourceVo roleResourceVo){
+    public Page<RoleResourceVo> roleResourceVoPageInfo(RoleResourceVo roleResourceVo){
 
-        Page<RoleResourceVo> page = PageHelper.startPage(roleResourceVo.getPage(), roleResourceVo.getPageSize());
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        Example example = new Example(RoleResource.class);
+            List<Predicate> predicates = Lists.newArrayList();
 
-        example.orderBy("rawUpdateTime").desc();
+            if (!Strings.isNullOrEmpty(roleResourceVo.getRoleName())){
 
-        Example.Criteria criteria = example.createCriteria();
+                predicates.add(criteriaBuilder.like(root.get("roleName"), "%" + roleResourceVo.getRoleName() + "%"));
 
-        if (!Strings.isNullOrEmpty(roleResourceVo.getRoleName())){
+            }
 
-            criteria.andLike("roleName","%" + roleResourceVo.getRoleName() + "%");
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 
-        }
+        };
 
-        this.list(example);
+        Pageable pageable = new PageRequest(roleResourceVo.getPage(), roleResourceVo.getPageSize(), Sort.Direction.DESC, "rawUpdateTime");
 
-        return new PageInfo<>(page);
+        Page<RoleResourceVo> page = this.roleResourceRepository.findAll(specification,pageable);
+
+        return page;
     }
 
-    public boolean updateRoleResource(RoleResourceVo roleResourceVo){
+    @Override
+    protected BaseRepository<RoleResource> JpaRepository() {
+        return roleResourceRepository;
+    }
 
 
-        Example example = new Example(RoleResource.class);
+    public boolean updateRoleResource(RoleResource roleResource){
 
-        Example.Criteria criteria = example.createCriteria();
+        try {
+            Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        if (!Strings.isNullOrEmpty(String.valueOf(roleResourceVo.getRoleId()))){
+                List<Predicate> predicates = Lists.newArrayList();
 
-            criteria.andEqualTo("roleId", roleResourceVo.getRoleId());
+                if (!Strings.isNullOrEmpty(String.valueOf(roleResource.getRoleId()))){
 
+                    predicates.add(criteriaBuilder.equal(root.get("roleId"), roleResource.getRoleId() ));
+
+                }
+
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+
+            };
+
+            List<RoleResource> roleResources = this.roleResourceRepository.findAll(specification);
+
+            roleResources.forEach(roleResource1 -> roleResource1.setRoleName(roleResource.getRoleName()));
+
+            this.roleResourceRepository.saveAll(roleResources);
+
+            return true;
+
+        }catch (Exception e) {
+
+            logger.error("Error", e);
+
+            return false;
         }
 
-        return this.updateByExampleSelective(roleResourceVo,example);
 
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
 public class UserVo extends User{
     private int pageNum = 1;
     private int pageSize = 10;
-    private int page = 1;
+    private int page = 0;
     private List<RoleVo> roles;
 
     public int getPageNum() {

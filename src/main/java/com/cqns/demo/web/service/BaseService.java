@@ -1,10 +1,9 @@
 package com.cqns.demo.web.service;
 
+import com.cqns.demo.dao.repository.UserRepository;
 import com.cqns.demo.dao.entity.NsUser;
 import com.cqns.demo.dao.entity.User;
-import com.cqns.demo.dao.mapper.UserMapper;
 import com.cqns.demo.utils.JwtTokenUtil;
-import com.cqns.demo.web.vo.UserVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,18 +17,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Optional;
+import java.util.Objects;
 
 @Service
 public class BaseService implements UserDetailsService  {
     private static Logger logger = LoggerFactory.getLogger(BaseService.class);
 
     @Resource
-    private UserMapper userMapper;
-    @Resource
     private AuthenticationManager authenticationManager;
     @Resource
     private UserDetailsService userDetailsService;
+    @Resource
+    private UserRepository userRepository;
 
     public String login(String username, String password) {
 try{
@@ -64,20 +63,16 @@ try{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // 根据用户名获取数据库的用户信息
-        User user = new UserVo();
+        User sysUser = this.userRepository.findByUsername(username);
 
-        user.setUsername(username);
+        if (Objects.nonNull(sysUser)) {
 
-        User sysUser = this.userMapper.selectOne(user);
-
-        if (!Optional.ofNullable(sysUser).isPresent()) {
-
-            throw new UsernameNotFoundException(String.format("'%s'.这个用户不存在", username));
+            return new NsUser(sysUser.getId(), sysUser.getUsername(), sysUser.getPassword(), sysUser.getDisplayName(), sysUser.getEnabled(), true, true, true, AuthorityUtils.NO_AUTHORITIES);
 
         } else {
 
-            return new NsUser(sysUser.getId(), sysUser.getUsername(), sysUser.getPassword(), sysUser.getDisplayName(), sysUser.getEnabled(), true, true, true, AuthorityUtils.NO_AUTHORITIES);
+            throw new UsernameNotFoundException(String.format("'%s'.这个用户不存在", username));
+
         }
 
     }

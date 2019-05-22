@@ -1,6 +1,6 @@
 package com.cqns.demo.web.controller;
 
-import com.cqns.demo.dao.entity.User;
+import com.cqns.demo.dao.entity.*;
 import com.cqns.demo.utils.ResultInfo;
 import com.cqns.demo.web.service.*;
 import com.cqns.demo.web.vo.*;
@@ -8,7 +8,7 @@ import com.github.pagehelper.PageInfo;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +39,12 @@ public class BaseController {
     }
 
     @RequestMapping(value = "/userVoPageInfo", method = RequestMethod.POST)
-    public ResultInfo<PageInfo> userVoPageInfo(@RequestBody UserVo userVo){
-        return ResultInfo.create(PageInfo.class).success(userService.userVoPageInfo(userVo));
+    public ResultInfo<Page> userVoPageInfo(@RequestBody UserVo userVo){
+        return ResultInfo.create(Page.class).success(userService.userVoPageInfo(userVo));
     }
 
     @RequestMapping(value = {"/updateUserById"}, method = {RequestMethod.POST})
-    public ResultInfo<Void> updateUserById(@RequestBody UserVo user){
+    public ResultInfo<Void> updateUserById(@RequestBody User user){
         Preconditions.checkNotNull(user.getId(), "Id不能为空");
         try{
             return this.userService.updateUser(user) ?
@@ -70,8 +70,8 @@ public class BaseController {
     }
 
     @RequestMapping(value = "/menuVoPageInfo", method = RequestMethod.POST)
-    public ResultInfo<PageInfo> menuVoPageInfo(@RequestBody MenuVo menuVo){
-        return ResultInfo.create(PageInfo.class).success(menuService.menuVoPageInfo(menuVo));
+    public ResultInfo<Page> menuVoPageInfo(@RequestBody MenuVo menuVo){
+        return ResultInfo.create(Page.class).success(menuService.menuVoPageInfo(menuVo));
     }
 
     @RequestMapping(value = "${jwt.route.login}", method = RequestMethod.GET)
@@ -108,14 +108,14 @@ public class BaseController {
     }
 
     @RequestMapping(value = {"/queryRolePage"}, method = {RequestMethod.POST})
-    public ResultInfo<PageInfo> queryRolePage(@RequestBody RoleVo roleVo) {
-        return ResultInfo.create(PageInfo.class).success(this.roleService.roleVoPageInfo(roleVo));
+    public ResultInfo<Page> queryRolePage(@RequestBody RoleVo roleVo) {
+        return ResultInfo.create(Page.class).success(this.roleService.roleVoPageInfo(roleVo));
     }
 
     @RequestMapping(value = {"/addRole"}, method = {RequestMethod.POST})
-    public ResultInfo<Void> addRole(@RequestBody RoleVo roleVo){
+    public  ResultInfo<Void> addRole(@RequestBody Role role){
         try{
-            return this.roleService.add(roleVo) ?
+            return this.roleService.insert(role) ?
                     ResultInfo.create().success().setMsg("添加成功") :
                     ResultInfo.create().fail("添加失败");
         }catch (Exception e){
@@ -125,18 +125,18 @@ public class BaseController {
     }
 
     @RequestMapping(value = {"/updateRoleById"}, method = {RequestMethod.POST})
-    public ResultInfo<Void> updateRoleById(@RequestBody RoleVo roleVo){
-        Preconditions.checkNotNull(roleVo.getId(), "Id不能为空");
+    public ResultInfo<Void> updateRoleById(@RequestBody Role role){
+        Preconditions.checkNotNull(role.getId(), "Id不能为空");
         try{
-            RoleResourceVo roleResourceVo = new RoleResourceVo();
-            roleResourceVo.setRoleId(roleVo.getId());
-            roleResourceVo.setRoleName(roleVo.getName());
-            UserRoleVo userRoleVo = new UserRoleVo();
-            userRoleVo.setRoleName(roleVo.getName());
-            userRoleVo.setRoleId(roleVo.getId());
-            this.roleService.updateById(roleVo);
-            this.roleResourceService.updateRoleResource(roleResourceVo);
-            this.userRoleService.updateUserRole(userRoleVo);
+            RoleResource roleResource = new RoleResource();
+            roleResource.setRoleId(role.getId());
+            roleResource.setRoleName(role.getName());
+            UserRole userRole = new UserRole();
+            userRole.setRoleName(role.getName());
+            userRole.setRoleId(role.getId());
+            this.roleService.updateById(role);
+            this.roleResourceService.updateRoleResource(roleResource);
+            this.userRoleService.updateUserRole(userRole);
         }catch (Exception e){
             logger.error("Error", e);
             throw new RuntimeException(e.getCause());
@@ -158,14 +158,14 @@ public class BaseController {
     }
 
     @RequestMapping(value = "/roleResourceVoPageInfo", method = RequestMethod.POST)
-    public ResultInfo<PageInfo> roleResourceVoPageInfo(@RequestBody RoleResourceVo roleResourceVo){
-        return ResultInfo.create(PageInfo.class).success(roleResourceService.roleResourceVoPageInfo(roleResourceVo));
+    public ResultInfo<Page> roleResourceVoPageInfo(@RequestBody RoleResourceVo roleResourceVo){
+        return ResultInfo.create(Page.class).success(roleResourceService.roleResourceVoPageInfo(roleResourceVo));
     }
 
     @RequestMapping(value = "/addRoleResource", method = RequestMethod.POST)
-    public ResultInfo<Void> addRoleResource(@RequestBody RoleResourceVo roleResourceVo){
+    public ResultInfo<Void> addRoleResource(@RequestBody RoleResource roleResource){
         try{
-            return this.roleResourceService.add(roleResourceVo) ?
+            return this.roleResourceService.insert(roleResource) ?
                     ResultInfo.create().success().setMsg("添加成功") :
                     ResultInfo.create().fail("添加失败");
         }catch (Exception e){
@@ -188,8 +188,8 @@ public class BaseController {
     }
 
     @RequestMapping(value = "/userRoleVoPageInfo", method = RequestMethod.POST)
-    public ResultInfo<PageInfo> userRoleVoPageInfo(@RequestBody UserRoleVo userRoleVo){
-        return ResultInfo.create(PageInfo.class).success(userRoleService.userRoleVoPageInfo(userRoleVo));
+    public ResultInfo<Page> userRoleVoPageInfo(@RequestBody UserRoleVo userRoleVo){
+        return ResultInfo.create(Page.class).success(userRoleService.userRoleVoPageInfo(userRoleVo));
     }
 
     @RequestMapping(value = "/roleVoListForOther", method = RequestMethod.POST)
@@ -203,9 +203,9 @@ public class BaseController {
     }
 
     @RequestMapping(value = "/addUserRole", method = RequestMethod.POST)
-    public ResultInfo<Void> addUserRole(@RequestBody UserRoleVo userRoleVo){
+    public ResultInfo<Void> addUserRole(@RequestBody UserRole userRole){
         try{
-            return this.userRoleService.add(userRoleVo) ?
+            return this.userRoleService.insert(userRole) ?
                     ResultInfo.create().success().setMsg("添加成功") :
                     ResultInfo.create().fail("添加失败");
         }catch (Exception e){
@@ -215,9 +215,9 @@ public class BaseController {
     }
 
     @RequestMapping(value = "/addMenu", method = RequestMethod.POST)
-    public ResultInfo<Void> addMenu(@RequestBody MenuVo menuVo){
+    public ResultInfo<Void> addMenu(@RequestBody Menu menu){
         try{
-            return this.menuService.add(menuVo) ?
+            return this.menuService.insert(menu) ?
                     ResultInfo.create().success().setMsg("添加成功") :
                     ResultInfo.create().fail("添加失败");
         }catch (Exception e){

@@ -2,99 +2,108 @@ package com.cqns.demo.web.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.cqns.demo.baseMap.MyBaseMapper;
+import com.cqns.demo.dao.repository.RoleRepository;
+import com.cqns.demo.dao.repository.UserRoleRepository;
+import com.cqns.demo.dao.baserepository.BaseRepository;
 import com.cqns.demo.dao.entity.Role;
 import com.cqns.demo.dao.entity.UserRole;
 import com.cqns.demo.dao.mapper.RoleMapper;
-import com.cqns.demo.dao.mapper.UserRoleMapper;
 import com.cqns.demo.web.vo.RoleVo;
 import com.cqns.demo.web.vo.UserRoleVo;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleService extends AbstractCommonService<Role> {
+public class RoleService extends AbstractCommonService<Role>{
     private static Logger logger = LoggerFactory.getLogger(RoleService.class);
     @Resource
     private RoleMapper roleMapper;
     @Resource
-    private UserRoleMapper userRoleMapper;
+    private UserRoleRepository userRoleRepository;
+    @Resource
+    private RoleRepository roleRepository;
     @Resource
     private UserRoleService userRoleService;
-    @Override
-    protected MyBaseMapper<Role> mapper() {
-        return roleMapper;
-    }
 
     public List<RoleVo> queryRolesByUserName(String userName) {
 
-        Example example = new Example(UserRole.class);
 
-        Example.Criteria criteria = example.createCriteria();
-
-        criteria.andEqualTo("userName", userName);
-
-        List<UserRole> userRoles = this.userRoleMapper.selectByExample(example);
+        List<UserRole> userRoles = this.userRoleRepository.findByUserName(userName);
 
         List<Role> roles = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList())
-                .stream().map(this::selectById).collect(Collectors.toList());
+                .stream().map(this.roleMapper::selectByPrimaryKey).collect(Collectors.toList());
 
         return JSON.parseObject(JSON.toJSONString(roles), new TypeReference<List<RoleVo>>(){}.getType());
     }
 
-    public PageInfo<RoleVo> roleVoPageInfo(RoleVo roleVo){
+    public Page<RoleVo> roleVoPageInfo(RoleVo roleVo){
 
-        Page<RoleVo> page = PageHelper.startPage(roleVo.getPage(), roleVo.getPageSize());
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        Example example = new Example(Role.class);
+            List<Predicate> predicates = Lists.newArrayList();
 
-        example.orderBy("rawUpdateTime").desc();
+            if (!Strings.isNullOrEmpty(roleVo.getName())){
 
-        Example.Criteria criteria = example.createCriteria();
+                predicates.add(criteriaBuilder.like(root.get("name"),"%" + roleVo.getName() + "%"));
 
-        if (!Strings.isNullOrEmpty(roleVo.getName())){
+            }
 
-            criteria.andLike("name","%" + roleVo.getName() + "%");
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 
-        }
+        };
 
-        this.list(example);
+        Pageable pageable = new PageRequest(roleVo.getPage(), roleVo.getPageSize(), Sort.Direction.ASC, "rawUpdateTime");
 
-        return new PageInfo<>(page);
+        Page<RoleVo> page = this.roleRepository.findAll(specification,pageable);
+
+        return page;
+    }
+
+    @Override
+    protected BaseRepository<Role> JpaRepository() {
+        return roleRepository;
     }
 
     //过滤所选择用户已经被选了的角色
     public List<RoleVo> roleVoListForOther(UserRoleVo userRoleVo){
 
-        Example example = new Example(Role.class);
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        Example.Criteria criteria = example.createCriteria();
+            List<Predicate> predicates = Lists.newArrayList();
 
-        if (!Strings.isNullOrEmpty(String.valueOf(userRoleVo.getUserId()))){
+            if (!Strings.isNullOrEmpty(String.valueOf(userRoleVo.getUserId()))){
 
-            List<Long> ids = this.userRoleService.userRoleVoList(userRoleVo)
-                    .stream().map(UserRoleVo::getRoleId).collect(Collectors.toList());
+                List<Long> ids = this.userRoleService.userRoleVoList(userRoleVo)
+                        .stream().map(UserRoleVo::getRoleId).collect(Collectors.toList());
 
-            if (!Iterables.isEmpty(ids))
+                if (!Iterables.isEmpty(ids))
 
-                criteria.andNotIn("id", ids);
+                    predicates.add(criteriaBuilder.not(root.get("id").in(ids)));
 
-        }
+            }
 
-        List<Role> roles = this.list(example);
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+
+        };
+
+        List<Role> roles = this.roleRepository.findAll(specification);
 
         return JSON.parseObject(JSON.toJSONString(roles), new TypeReference<List<RoleVo>>(){}.getType());
+
     }
 
 }

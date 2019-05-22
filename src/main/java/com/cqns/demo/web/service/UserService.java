@@ -2,89 +2,96 @@ package com.cqns.demo.web.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.cqns.demo.baseMap.MyBaseMapper;
+import com.cqns.demo.dao.entity.RoleResource;
+import com.cqns.demo.dao.repository.UserRepository;
+import com.cqns.demo.dao.baserepository.BaseRepository;
 import com.cqns.demo.dao.entity.User;
-import com.cqns.demo.dao.mapper.UserMapper;
+import com.cqns.demo.web.vo.RoleResourceVo;
 import com.cqns.demo.web.vo.RoleVo;
 import com.cqns.demo.web.vo.UserVo;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
 import java.util.List;
 
 @Service
-public class UserService extends AbstractCommonService<User> {
+public class UserService extends AbstractCommonService<User>{
     private static Logger logger = LoggerFactory.getLogger(UserService.class);
     @Resource
     private RoleService roleService;
     @Resource
-    private UserMapper userMapper;
+    private UserRepository userRepository;
     @Resource
     private PasswordEncoder passwordEncoder;
-    @Override
-    protected MyBaseMapper<User> mapper() {
-        return userMapper;
-    }
 
     public List<UserVo> userVoList(UserVo userVo){
 
-        Example example = new Example(User.class);
 
-        example.orderBy("rawUpdateTime").desc();
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        Example.Criteria criteria = example.createCriteria();
+            List<Predicate> predicates = Lists.newArrayList();
 
-        if (!Strings.isNullOrEmpty(userVo.getDisplayName())){
+            if (!Strings.isNullOrEmpty(userVo.getDisplayName())){
 
-            criteria.andLike("displayName","%" + userVo.getDisplayName() + "%");
+                predicates.add(criteriaBuilder.like(root.get("displayName"), "%" + userVo.getDisplayName() + "%"));
 
-        }
-        if (!Strings.isNullOrEmpty(userVo.getUsername())){
+            }
+            if (!Strings.isNullOrEmpty(userVo.getUsername())){
 
-            criteria.andEqualTo("username", userVo.getUsername());
+                predicates.add(criteriaBuilder.equal(root.get("username"), userVo.getUsername()));
 
-        }
+            }
 
-        List<User> users = this.list(example);
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+
+        };
+
+        List<User> users = this.userRepository.findAll(specification);
 
         return JSON.parseObject(JSON.toJSONString(users), new TypeReference<List<UserVo>>(){}.getType());
+
     }
 
-    public PageInfo<UserVo> userVoPageInfo(UserVo userVo){
+    public Page<UserVo> userVoPageInfo(UserVo userVo){
 
-        Page<UserVo> page = PageHelper.startPage(userVo.getPage(), userVo.getPageSize());
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        Example example = new Example(User.class);
+            List<Predicate> predicates = Lists.newArrayList();
 
-        example.orderBy("rawUpdateTime").desc();
+            if (!Strings.isNullOrEmpty(userVo.getDisplayName())){
 
-        Example.Criteria criteria = example.createCriteria();
+                predicates.add(criteriaBuilder.like(root.get("displayName"),"%" + userVo.getDisplayName() + "%"));
 
-        if (!Strings.isNullOrEmpty(userVo.getDisplayName())){
+            }
 
-            criteria.andLike("displayName","%" + userVo.getDisplayName() + "%");
+            if (!Strings.isNullOrEmpty(userVo.getUsername())){
 
-        }
+                predicates.add(criteriaBuilder.like(root.get("username"),"%" + userVo.getUsername() + "%"));
 
-        if (!Strings.isNullOrEmpty(userVo.getUsername())){
+            }
 
-            criteria.andLike("username","%" + userVo.getUsername() + "%");
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 
-        }
+        };
 
-        this.list(example);
+        Pageable pageable = new PageRequest(userVo.getPage(), userVo.getPageSize(), Sort.Direction.DESC, "rawUpdateTime");
 
-        return new PageInfo<>(page);
+        Page<UserVo> page = this.userRepository.findAll(specification,pageable);
+
+        return page;
     }
 
     public UserVo queryUserDetailByName(String userName) {
@@ -104,11 +111,7 @@ public class UserService extends AbstractCommonService<User> {
 
         Preconditions.checkNotNull(userName, "用户名不能为为空");
 
-        User user = new User();
-
-        user.setUsername(userName);
-
-        user = this.userMapper.selectOne(user);
+        User user = this.userRepository.findByUsername(userName);
 
         UserVo userVO = new UserVo();
 
@@ -118,11 +121,16 @@ public class UserService extends AbstractCommonService<User> {
 
     }
 
+    @Override
+    protected BaseRepository<User> JpaRepository() {
+        return userRepository;
+    }
+
     public Boolean register(User user){
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        return this.add(user);
+        return this.insert(user);
 
     }
 

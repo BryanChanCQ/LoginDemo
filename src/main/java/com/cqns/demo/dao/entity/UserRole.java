@@ -1,127 +1,117 @@
 package com.cqns.demo.dao.entity;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.sql.Timestamp;
 
-@Table(name = "t_user_role")
+@Entity
+@Table(name = "t_user_role", schema = "cqns", catalog = "")
 public class UserRole {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SELECT LAST_INSERT_ID()")
-    private Long id;
-
-    @Column(name = "user_id")
-    private Long userId;
-
-    @Column(name = "role_id")
-    private Long roleId;
-
-    @Column(name = "user_name")
+    private long id;
+    private long userId;
+    private long roleId;
     private String userName;
-
-    @Column(name = "role_name")
     private String roleName;
+    private Timestamp rawUpdateTime;
+    private Timestamp rawAddTime;
 
-    @Column(name = "raw_update_time")
-    private Date rawUpdateTime;
-
-    @Column(name = "raw_add_time")
-    private Date rawAddTime;
-
-    /**
-     * @return id
-     */
-    public Long getId() {
+    @Id
+    @Column(name = "id")
+    public long getId() {
         return id;
     }
 
-    /**
-     * @param id
-     */
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    /**
-     * @return user_id
-     */
-    public Long getUserId() {
+    @Basic
+    @Column(name = "user_id")
+    public long getUserId() {
         return userId;
     }
 
-    /**
-     * @param userId
-     */
-    public void setUserId(Long userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
-    /**
-     * @return role_id
-     */
-    public Long getRoleId() {
+    @Basic
+    @Column(name = "role_id")
+    public long getRoleId() {
         return roleId;
     }
 
-    /**
-     * @param roleId
-     */
-    public void setRoleId(Long roleId) {
+    public void setRoleId(long roleId) {
         this.roleId = roleId;
     }
 
-    /**
-     * @return user_name
-     */
+    @Basic
+    @Column(name = "user_name")
     public String getUserName() {
         return userName;
     }
 
-    /**
-     * @param userName
-     */
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
-    /**
-     * @return role_name
-     */
+    @Basic
+    @Column(name = "role_name")
     public String getRoleName() {
         return roleName;
     }
 
-    /**
-     * @param roleName
-     */
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 
-    /**
-     * @return raw_update_time
-     */
-    public Date getRawUpdateTime() {
+    @Basic
+    @Column(name = "raw_update_time")
+    public Timestamp getRawUpdateTime() {
         return rawUpdateTime;
     }
 
-    /**
-     * @param rawUpdateTime
-     */
-    public void setRawUpdateTime(Date rawUpdateTime) {
+    public void setRawUpdateTime(Timestamp rawUpdateTime) {
         this.rawUpdateTime = rawUpdateTime;
     }
 
-    /**
-     * @return raw_add_time
-     */
-    public Date getRawAddTime() {
+    @Basic
+    @Column(name = "raw_add_time")
+    public Timestamp getRawAddTime() {
         return rawAddTime;
     }
 
-    /**
-     * @param rawAddTime
-     */
-    public void setRawAddTime(Date rawAddTime) {
+    public void setRawAddTime(Timestamp rawAddTime) {
         this.rawAddTime = rawAddTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserRole userRole = (UserRole) o;
+
+        if (id != userRole.id) return false;
+        if (userId != userRole.userId) return false;
+        if (roleId != userRole.roleId) return false;
+        if (userName != null ? !userName.equals(userRole.userName) : userRole.userName != null) return false;
+        if (roleName != null ? !roleName.equals(userRole.roleName) : userRole.roleName != null) return false;
+        if (rawUpdateTime != null ? !rawUpdateTime.equals(userRole.rawUpdateTime) : userRole.rawUpdateTime != null)
+            return false;
+        if (rawAddTime != null ? !rawAddTime.equals(userRole.rawAddTime) : userRole.rawAddTime != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (userId ^ (userId >>> 32));
+        result = 31 * result + (int) (roleId ^ (roleId >>> 32));
+        result = 31 * result + (userName != null ? userName.hashCode() : 0);
+        result = 31 * result + (roleName != null ? roleName.hashCode() : 0);
+        result = 31 * result + (rawUpdateTime != null ? rawUpdateTime.hashCode() : 0);
+        result = 31 * result + (rawAddTime != null ? rawAddTime.hashCode() : 0);
+        return result;
     }
 }

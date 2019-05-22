@@ -1,216 +1,156 @@
 package com.cqns.demo.dao.entity;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.sql.Timestamp;
 
-@Table(name = "t_menu")
+@Entity
+@Table(name = "t_menu", schema = "cqns", catalog = "")
 public class Menu {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SELECT LAST_INSERT_ID()")
-    private Long id;
-
+    private long id;
     private String name;
-
-    /**
-     * 父id
-     */
-    @Column(name = "parent_id")
-    private Long parentId;
-
-    /**
-     * 父菜单名
-     */
-    @Column(name = "parent_name")
+    private long parentId;
     private String parentName;
-
-    /**
-     * 图标
-     */
     private String icon;
-
-    /**
-     * 顺序
-     */
-    @Column(name = "order_num")
-    private Integer orderNum;
-
-    /**
-     * url
-     */
+    private int orderNum;
     private String url;
-
-    /**
-     * 菜单类型
-     */
     private Integer type;
+    private Timestamp rawUpdateTime;
+    private Timestamp rawAddTime;
 
-    @Column(name = "raw_update_time")
-    private Date rawUpdateTime;
-
-    @Column(name = "raw_add_time")
-    private Date rawAddTime;
-
-    /**
-     * @return id
-     */
-    public Long getId() {
+    @Id
+    @Column(name = "id")
+    public long getId() {
         return id;
     }
 
-    /**
-     * @param id
-     */
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    /**
-     * @return name
-     */
+    @Basic
+    @Column(name = "name")
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * 获取父id
-     *
-     * @return parent_id - 父id
-     */
-    public Long getParentId() {
+    @Basic
+    @Column(name = "parent_id")
+    public long getParentId() {
         return parentId;
     }
 
-    /**
-     * 设置父id
-     *
-     * @param parentId 父id
-     */
-    public void setParentId(Long parentId) {
+    public void setParentId(long parentId) {
         this.parentId = parentId;
     }
 
-    /**
-     * 获取父菜单名
-     *
-     * @return parent_name - 父菜单名
-     */
+    @Basic
+    @Column(name = "parent_name")
     public String getParentName() {
         return parentName;
     }
 
-    /**
-     * 设置父菜单名
-     *
-     * @param parentName 父菜单名
-     */
     public void setParentName(String parentName) {
         this.parentName = parentName;
     }
 
-    /**
-     * 获取图标
-     *
-     * @return icon - 图标
-     */
+    @Basic
+    @Column(name = "icon")
     public String getIcon() {
         return icon;
     }
 
-    /**
-     * 设置图标
-     *
-     * @param icon 图标
-     */
     public void setIcon(String icon) {
         this.icon = icon;
     }
 
-    /**
-     * 获取顺序
-     *
-     * @return order_num - 顺序
-     */
-    public Integer getOrderNum() {
+    @Basic
+    @Column(name = "order_num")
+    public int getOrderNum() {
         return orderNum;
     }
 
-    /**
-     * 设置顺序
-     *
-     * @param orderNum 顺序
-     */
-    public void setOrderNum(Integer orderNum) {
+    public void setOrderNum(int orderNum) {
         this.orderNum = orderNum;
     }
 
-    /**
-     * 获取url
-     *
-     * @return url - url
-     */
+    @Basic
+    @Column(name = "url")
     public String getUrl() {
         return url;
     }
 
-    /**
-     * 设置url
-     *
-     * @param url url
-     */
     public void setUrl(String url) {
         this.url = url;
     }
 
-    /**
-     * 获取菜单类型
-     *
-     * @return type - 菜单类型
-     */
+    @Basic
+    @Column(name = "type")
     public Integer getType() {
         return type;
     }
 
-    /**
-     * 设置菜单类型
-     *
-     * @param type 菜单类型
-     */
     public void setType(Integer type) {
         this.type = type;
     }
 
-    /**
-     * @return raw_update_time
-     */
-    public Date getRawUpdateTime() {
+    @Basic
+    @Column(name = "raw_update_time")
+    public Timestamp getRawUpdateTime() {
         return rawUpdateTime;
     }
 
-    /**
-     * @param rawUpdateTime
-     */
-    public void setRawUpdateTime(Date rawUpdateTime) {
+    public void setRawUpdateTime(Timestamp rawUpdateTime) {
         this.rawUpdateTime = rawUpdateTime;
     }
 
-    /**
-     * @return raw_add_time
-     */
-    public Date getRawAddTime() {
+    @Basic
+    @Column(name = "raw_add_time")
+    public Timestamp getRawAddTime() {
         return rawAddTime;
     }
 
-    /**
-     * @param rawAddTime
-     */
-    public void setRawAddTime(Date rawAddTime) {
+    public void setRawAddTime(Timestamp rawAddTime) {
         this.rawAddTime = rawAddTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Menu menu = (Menu) o;
+
+        if (id != menu.id) return false;
+        if (parentId != menu.parentId) return false;
+        if (orderNum != menu.orderNum) return false;
+        if (name != null ? !name.equals(menu.name) : menu.name != null) return false;
+        if (parentName != null ? !parentName.equals(menu.parentName) : menu.parentName != null) return false;
+        if (icon != null ? !icon.equals(menu.icon) : menu.icon != null) return false;
+        if (url != null ? !url.equals(menu.url) : menu.url != null) return false;
+        if (type != null ? !type.equals(menu.type) : menu.type != null) return false;
+        if (rawUpdateTime != null ? !rawUpdateTime.equals(menu.rawUpdateTime) : menu.rawUpdateTime != null)
+            return false;
+        if (rawAddTime != null ? !rawAddTime.equals(menu.rawAddTime) : menu.rawAddTime != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (int) (parentId ^ (parentId >>> 32));
+        result = 31 * result + (parentName != null ? parentName.hashCode() : 0);
+        result = 31 * result + (icon != null ? icon.hashCode() : 0);
+        result = 31 * result + orderNum;
+        result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (rawUpdateTime != null ? rawUpdateTime.hashCode() : 0);
+        result = 31 * result + (rawAddTime != null ? rawAddTime.hashCode() : 0);
+        return result;
     }
 }

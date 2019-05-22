@@ -10,10 +10,6 @@
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
 
-        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
-            <property name="mappers" value="com.cqns.demo.baseMap.MyBaseMapper"/>
-        </plugin>
-
         <jdbcConnection driverClass="${fm.ds.driverClassName}"
                         connectionURL="${fm.ds.url}"
                         userId="${fm.ds.username}"
@@ -27,7 +23,7 @@
         <javaClientGenerator targetPackage="com.cqns.demo.dao.mapper" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table tableName="t_user" >
+        <table tableName="t_user_role" >
             <property name="useActualColumnNames" value="false" />
             <!--mysql 配置-->
             <generatedKey column="id" sqlStatement="Mysql"/>

@@ -2,105 +2,131 @@ package com.cqns.demo.web.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.cqns.demo.baseMap.MyBaseMapper;
-import com.cqns.demo.dao.entity.UserRole;
 import com.cqns.demo.dao.mapper.UserRoleMapper;
+import com.cqns.demo.dao.repository.UserRoleRepository;
+import com.cqns.demo.dao.baserepository.BaseRepository;
+import com.cqns.demo.dao.entity.UserRole;
+import com.cqns.demo.web.vo.MenuVo;
 import com.cqns.demo.web.vo.UserRoleVo;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.cqns.demo.web.vo.UserVo;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserRoleService extends AbstractCommonService<UserRole> {
-    private static Logger logger = LoggerFactory.getLogger(UserRoleService.class);
     @Resource
-    private UserRoleMapper userRoleMapper;
+    private UserRoleRepository userRoleRepository;
     @Override
-    protected MyBaseMapper<UserRole> mapper() {
-        return userRoleMapper;
+    protected BaseRepository<UserRole> JpaRepository() {
+        return userRoleRepository;
     }
+
+    private static Logger logger = LoggerFactory.getLogger(UserRoleService.class);
 
     public List<UserRoleVo> userRoleVoList(UserRoleVo userRoleVo){
 
-        Example example = new Example(UserRole.class);
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        example.orderBy("rawUpdateTime").desc();
+            List<Predicate> predicates = Lists.newArrayList();
 
-        Example.Criteria criteria = example.createCriteria();
+            if (!Strings.isNullOrEmpty(userRoleVo.getRoleName())){
 
-        if (!Strings.isNullOrEmpty(userRoleVo.getRoleName())){
+                predicates.add(criteriaBuilder.like(root.get("roleName"),"%" + userRoleVo.getRoleName() + "%"));
 
-            criteria.andLike("roleName","%" + userRoleVo.getRoleName() + "%");
+            }
 
-        }
+            if (!Strings.isNullOrEmpty(userRoleVo.getUserName())){
 
-        if (!Strings.isNullOrEmpty(userRoleVo.getUserName())){
+                predicates.add(criteriaBuilder.equal(root.get("userName"), userRoleVo.getUserName()));
 
-            criteria.andLike("userName","%" + userRoleVo.getUserName() + "%");
+            }
 
-        }
+            if (!Strings.isNullOrEmpty(String.valueOf(userRoleVo.getUserId()))){
 
-        if (!Strings.isNullOrEmpty(String.valueOf(userRoleVo.getUserId()))){
+                predicates.add(criteriaBuilder.equal(root.get("userId"), userRoleVo.getUserId()));
 
-            criteria.andEqualTo("userId", userRoleVo.getUserId());
+            }
 
-        }
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 
-        List<UserRole> userRoles = this.list(example);
+        };
+
+        List<UserRole> userRoles = this.userRoleRepository.findAll(specification,Sort.by(Sort.Direction.DESC,"rawUpdateTime"));
 
         return JSON.parseObject(JSON.toJSONString(userRoles), new TypeReference<List<UserRoleVo>>(){}.getType());
     }
 
-    public PageInfo<UserRoleVo> userRoleVoPageInfo(UserRoleVo userRoleVo){
+    public Page<UserRoleVo> userRoleVoPageInfo(UserRoleVo userRoleVo){
 
-        Page<UserRoleVo> page = PageHelper.startPage(userRoleVo.getPage(), userRoleVo.getPageSize());
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        Example example = new Example(UserRole.class);
+            List<Predicate> predicates = Lists.newArrayList();
 
-        example.orderBy("rawUpdateTime").desc();
+            if (!Strings.isNullOrEmpty(userRoleVo.getUserName())){
 
-        Example.Criteria criteria = example.createCriteria();
+                predicates.add(criteriaBuilder.like(root.get("userName"),"%" + userRoleVo.getUserName() + "%"));
 
-        if (!Strings.isNullOrEmpty(userRoleVo.getUserName())){
+            }
 
-            criteria.andLike("userName","%" + userRoleVo.getUserName() + "%");
+            if (!Strings.isNullOrEmpty(userRoleVo.getRoleName())){
 
-        }
+                predicates.add(criteriaBuilder.like(root.get("roleName"),"%" + userRoleVo.getRoleName() + "%"));
 
-        if (!Strings.isNullOrEmpty(userRoleVo.getRoleName())){
+            }
 
-            criteria.andLike("roleName","%" + userRoleVo.getRoleName() + "%");
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 
-        }
+        };
 
-        this.list(example);
+        Pageable pageable = new PageRequest(userRoleVo.getPage(), userRoleVo.getPageSize(), Sort.Direction.DESC, "rawUpdateTime");
 
-        return new PageInfo<>(page);
+        Page<UserRoleVo> page = this.userRoleRepository.findAll(specification,pageable);
+
+        return page;
     }
 
-    public boolean updateUserRole(UserRoleVo userRoleVo){
+    public boolean updateUserRole(UserRole userRole){
 
+        try {
+            Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        Example example = new Example(UserRole.class);
+                List<Predicate> predicates = Lists.newArrayList();
 
-        Example.Criteria criteria = example.createCriteria();
+                if (!Strings.isNullOrEmpty(String.valueOf(userRole.getRoleId()))){
 
-        if (Optional.ofNullable(userRoleVo.getRoleId()).isPresent()){
+                    predicates.add(criteriaBuilder.equal(root.get("roleId"), userRole.getRoleId() ));
 
-            criteria.andEqualTo("roleId", userRoleVo.getRoleId());
+                }
 
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+
+            };
+
+            List<UserRole> userRoles = this.userRoleRepository.findAll(specification);
+
+            userRoles.forEach(userRole1 -> userRole1.setRoleName(userRole.getRoleName()));
+
+            this.userRoleRepository.saveAll(userRoles);
+            return true;
+        }catch (Exception e) {
+            logger.error("Error", e);
+            return false;
         }
 
-        return this.updateByExampleSelective(userRoleVo,example);
+
+
 
     }
 }

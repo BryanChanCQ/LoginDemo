@@ -2,66 +2,70 @@ package com.cqns.demo.web.service;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.cqns.demo.baseMap.MyBaseMapper;
+import com.cqns.demo.dao.repository.MenuRepository;
+import com.cqns.demo.dao.baserepository.BaseRepository;
 import com.cqns.demo.dao.entity.Menu;
 import com.cqns.demo.dao.entity.RoleResource;
 import com.cqns.demo.dao.mapper.MenuMapper;
 import com.cqns.demo.web.vo.MenuVo;
 import com.cqns.demo.web.vo.RoleResourceVo;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.google.common.base.Strings;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import javax.persistence.criteria.Predicate;
 import java.util.*;
 
 import java.util.stream.Collectors;
 
 @Service
-public class MenuService extends AbstractCommonService<Menu> {
+public class MenuService extends AbstractCommonService<Menu>{
     private static Logger logger = LoggerFactory.getLogger(MenuService.class);
+
     @Resource
     private RoleResourceService roleResourceService;
     @Resource
     private MenuMapper menuMapper;
-    @Override
-    protected MyBaseMapper<Menu> mapper() {
-        return menuMapper;
-    }
+    @Resource
+    private MenuRepository menuRepository;
 
     public List<MenuVo> queryMenuByIds(List<Long> ids) {
 
-        List<Menu> menuList = ids.stream().distinct().map(this::selectById).collect(Collectors.toList());
+        List<Menu> menuList = ids.stream().distinct().map(this.menuMapper::selectByPrimaryKey).collect(Collectors.toList());
 
         return JSON.parseObject(JSON.toJSONString(menuList), new TypeReference<List<MenuVo>>(){}.getType());
     }
 
-    public PageInfo<MenuVo> menuVoPageInfo(MenuVo menuVo){
+    public Page<MenuVo> menuVoPageInfo(MenuVo menuVo){
 
-        Page<MenuVo> page = PageHelper.startPage(menuVo.getPage(), menuVo.getPageSize());
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        Example example = new Example(Menu.class);
+            List<Predicate> predicates = Lists.newArrayList();
 
-        example.orderBy("parentId").asc();
+            if (!Strings.isNullOrEmpty(menuVo.getName())){
 
-        Example.Criteria criteria = example.createCriteria();
+                predicates.add(criteriaBuilder.like(root.get("name"),"%" + menuVo.getName() + "%"));
 
-        if (!Strings.isNullOrEmpty(menuVo.getName())){
+            }
 
-            criteria.andLike("name","%" + menuVo.getName() + "%");
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
 
-        }
+        };
 
-        this.list(example);
+        Pageable pageable = new PageRequest(menuVo.getPage(), menuVo.getPageSize(), Sort.Direction.ASC, "parentId");
 
-        return new PageInfo<>(page);
+        Page<MenuVo> page = this.menuRepository.findAll(specification,pageable);
+
+
+        return page;
     }
 
     public List<MenuVo> queryMenusByRoleIds(List<Long> ids) {
@@ -89,25 +93,34 @@ public class MenuService extends AbstractCommonService<Menu> {
         return menus1;
     }
 
+    @Override
+    protected BaseRepository<Menu> JpaRepository() {
+        return menuRepository;
+    }
+
     //过滤所选择角色已经被选了的菜单
     public List<MenuVo> menuVoListForOther(RoleResourceVo roleResourceVo){
 
-        Example example = new Example(Menu.class);
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
-        Example.Criteria criteria = example.createCriteria();
+            List<Predicate> predicates = Lists.newArrayList();
 
-        if (!Strings.isNullOrEmpty(String.valueOf(roleResourceVo.getRoleId()))){
+            if (!Strings.isNullOrEmpty(String.valueOf(roleResourceVo.getRoleId()))){
 
-            List<Long> ids = this.roleResourceService.roleResourceVos(roleResourceVo).
-                    stream().map(RoleResourceVo::getResourceId).collect(Collectors.toList());
+                List<Long> ids = this.roleResourceService.roleResourceVos(roleResourceVo).
+                        stream().map(RoleResourceVo::getResourceId).collect(Collectors.toList());
 
-            if (Objects.nonNull(ids) && !ids.isEmpty())
+                if (Objects.nonNull(ids) && !ids.isEmpty())
 
-                criteria.andNotIn("id", ids);
+                    predicates.add(criteriaBuilder.not(root.get("id").in(ids)));
 
-        }
+            }
 
-        List<Menu> menus = this.list(example);
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+
+        };
+
+        List<Menu> menus = this.menuRepository.findAll(specification);
 
         return JSON.parseObject(JSON.toJSONString(menus), new TypeReference<List<MenuVo>>(){}.getType());
     }

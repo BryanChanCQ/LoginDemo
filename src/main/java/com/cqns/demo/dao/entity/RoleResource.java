@@ -1,161 +1,144 @@
 package com.cqns.demo.dao.entity;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.sql.Timestamp;
 
-@Table(name = "t_role_resource")
+@Entity
+@Table(name = "t_role_resource", schema = "cqns", catalog = "")
 public class RoleResource {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SELECT LAST_INSERT_ID()")
-    private Long id;
-
-    @Column(name = "role_id")
-    private Long roleId;
-
-    @Column(name = "resource_id")
-    private Long resourceId;
-
-    @Column(name = "resource_type")
+    private long id;
+    private long roleId;
+    private long resourceId;
     private Integer resourceType;
-
-    @Column(name = "resource_name")
     private String resourceName;
-
-    @Column(name = "raw_update_time")
-    private Date rawUpdateTime;
-
-    @Column(name = "raw_add_time")
-    private Date rawAddTime;
-
-    @Column(name = "role_name")
+    private Timestamp rawUpdateTime;
+    private Timestamp rawAddTime;
     private String roleName;
-
-    @Column(name = "resource_type_name")
     private String resourceTypeName;
 
-    /**
-     * @return id
-     */
-    public Long getId() {
+    @Id
+    @Column(name = "id")
+    public long getId() {
         return id;
     }
 
-    /**
-     * @param id
-     */
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    /**
-     * @return role_id
-     */
-    public Long getRoleId() {
+    @Basic
+    @Column(name = "role_id")
+    public long getRoleId() {
         return roleId;
     }
 
-    /**
-     * @param roleId
-     */
-    public void setRoleId(Long roleId) {
+    public void setRoleId(long roleId) {
         this.roleId = roleId;
     }
 
-    /**
-     * @return resource_id
-     */
-    public Long getResourceId() {
+    @Basic
+    @Column(name = "resource_id")
+    public long getResourceId() {
         return resourceId;
     }
 
-    /**
-     * @param resourceId
-     */
-    public void setResourceId(Long resourceId) {
+    public void setResourceId(long resourceId) {
         this.resourceId = resourceId;
     }
 
-    /**
-     * @return resource_type
-     */
+    @Basic
+    @Column(name = "resource_type")
     public Integer getResourceType() {
         return resourceType;
     }
 
-    /**
-     * @param resourceType
-     */
     public void setResourceType(Integer resourceType) {
         this.resourceType = resourceType;
     }
 
-    /**
-     * @return resource_name
-     */
+    @Basic
+    @Column(name = "resource_name")
     public String getResourceName() {
         return resourceName;
     }
 
-    /**
-     * @param resourceName
-     */
     public void setResourceName(String resourceName) {
         this.resourceName = resourceName;
     }
 
-    /**
-     * @return raw_update_time
-     */
-    public Date getRawUpdateTime() {
+    @Basic
+    @Column(name = "raw_update_time")
+    public Timestamp getRawUpdateTime() {
         return rawUpdateTime;
     }
 
-    /**
-     * @param rawUpdateTime
-     */
-    public void setRawUpdateTime(Date rawUpdateTime) {
+    public void setRawUpdateTime(Timestamp rawUpdateTime) {
         this.rawUpdateTime = rawUpdateTime;
     }
 
-    /**
-     * @return raw_add_time
-     */
-    public Date getRawAddTime() {
+    @Basic
+    @Column(name = "raw_add_time")
+    public Timestamp getRawAddTime() {
         return rawAddTime;
     }
 
-    /**
-     * @param rawAddTime
-     */
-    public void setRawAddTime(Date rawAddTime) {
+    public void setRawAddTime(Timestamp rawAddTime) {
         this.rawAddTime = rawAddTime;
     }
 
-    /**
-     * @return role_name
-     */
+    @Basic
+    @Column(name = "role_name")
     public String getRoleName() {
         return roleName;
     }
 
-    /**
-     * @param roleName
-     */
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
 
-    /**
-     * @return resource_type_name
-     */
+    @Basic
+    @Column(name = "resource_type_name")
     public String getResourceTypeName() {
         return resourceTypeName;
     }
 
-    /**
-     * @param resourceTypeName
-     */
     public void setResourceTypeName(String resourceTypeName) {
         this.resourceTypeName = resourceTypeName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RoleResource that = (RoleResource) o;
+
+        if (id != that.id) return false;
+        if (roleId != that.roleId) return false;
+        if (resourceId != that.resourceId) return false;
+        if (resourceType != null ? !resourceType.equals(that.resourceType) : that.resourceType != null) return false;
+        if (resourceName != null ? !resourceName.equals(that.resourceName) : that.resourceName != null) return false;
+        if (rawUpdateTime != null ? !rawUpdateTime.equals(that.rawUpdateTime) : that.rawUpdateTime != null)
+            return false;
+        if (rawAddTime != null ? !rawAddTime.equals(that.rawAddTime) : that.rawAddTime != null) return false;
+        if (roleName != null ? !roleName.equals(that.roleName) : that.roleName != null) return false;
+        if (resourceTypeName != null ? !resourceTypeName.equals(that.resourceTypeName) : that.resourceTypeName != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (roleId ^ (roleId >>> 32));
+        result = 31 * result + (int) (resourceId ^ (resourceId >>> 32));
+        result = 31 * result + (resourceType != null ? resourceType.hashCode() : 0);
+        result = 31 * result + (resourceName != null ? resourceName.hashCode() : 0);
+        result = 31 * result + (rawUpdateTime != null ? rawUpdateTime.hashCode() : 0);
+        result = 31 * result + (rawAddTime != null ? rawAddTime.hashCode() : 0);
+        result = 31 * result + (roleName != null ? roleName.hashCode() : 0);
+        result = 31 * result + (resourceTypeName != null ? resourceTypeName.hashCode() : 0);
+        return result;
     }
 }

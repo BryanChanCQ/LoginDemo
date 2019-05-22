@@ -1,75 +1,78 @@
 package com.cqns.demo.dao.entity;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.sql.Timestamp;
 
-@Table(name = "t_role")
+@Entity
+@Table(name = "t_role", schema = "cqns", catalog = "")
 public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "SELECT LAST_INSERT_ID()")
-    private Long id;
-
+    private long id;
     private String name;
+    private Timestamp rawUpdateTime;
+    private Timestamp rawAddTime;
 
-    @Column(name = "raw_update_time")
-    private Date rawUpdateTime;
-
-    @Column(name = "raw_add_time")
-    private Date rawAddTime;
-
-    /**
-     * @return id
-     */
-    public Long getId() {
+    @Id
+    @Column(name = "id")
+    public long getId() {
         return id;
     }
 
-    /**
-     * @param id
-     */
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    /**
-     * @return name
-     */
+    @Basic
+    @Column(name = "name")
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return raw_update_time
-     */
-    public Date getRawUpdateTime() {
+    @Basic
+    @Column(name = "raw_update_time")
+    public Timestamp getRawUpdateTime() {
         return rawUpdateTime;
     }
 
-    /**
-     * @param rawUpdateTime
-     */
-    public void setRawUpdateTime(Date rawUpdateTime) {
+    public void setRawUpdateTime(Timestamp rawUpdateTime) {
         this.rawUpdateTime = rawUpdateTime;
     }
 
-    /**
-     * @return raw_add_time
-     */
-    public Date getRawAddTime() {
+    @Basic
+    @Column(name = "raw_add_time")
+    public Timestamp getRawAddTime() {
         return rawAddTime;
     }
 
-    /**
-     * @param rawAddTime
-     */
-    public void setRawAddTime(Date rawAddTime) {
+    public void setRawAddTime(Timestamp rawAddTime) {
         this.rawAddTime = rawAddTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Role role = (Role) o;
+
+        if (id != role.id) return false;
+        if (name != null ? !name.equals(role.name) : role.name != null) return false;
+        if (rawUpdateTime != null ? !rawUpdateTime.equals(role.rawUpdateTime) : role.rawUpdateTime != null)
+            return false;
+        if (rawAddTime != null ? !rawAddTime.equals(role.rawAddTime) : role.rawAddTime != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (rawUpdateTime != null ? rawUpdateTime.hashCode() : 0);
+        result = 31 * result + (rawAddTime != null ? rawAddTime.hashCode() : 0);
+        return result;
     }
 }

@@ -5,7 +5,7 @@ import com.cqns.demo.dao.entity.Role;
 public class RoleVo extends Role {
     private int pageNum = 1;
     private int pageSize = 10;
-    private int page = 1;
+    private int page = 0;
 
     public int getPageNum() {
         return pageNum;
