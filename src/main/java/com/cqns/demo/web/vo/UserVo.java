@@ -1,13 +1,10 @@
 package com.cqns.demo.web.vo;
 
 import com.cqns.demo.dao.entity.User;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.List;
 
-public class UserVo extends User{
+public class UserVo extends User {
     private int pageNum = 1;
     private int pageSize = 10;
     private int page = 0;

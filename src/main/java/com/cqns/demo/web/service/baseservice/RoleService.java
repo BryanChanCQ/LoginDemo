@@ -1,13 +1,14 @@
-package com.cqns.demo.web.service;
+package com.cqns.demo.web.service.baseservice;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.cqns.demo.dao.repository.RoleRepository;
-import com.cqns.demo.dao.repository.UserRoleRepository;
-import com.cqns.demo.dao.baserepository.BaseRepository;
 import com.cqns.demo.dao.entity.Role;
 import com.cqns.demo.dao.entity.UserRole;
 import com.cqns.demo.dao.mapper.RoleMapper;
+import com.cqns.demo.dao.repository.RoleRepository;
+import com.cqns.demo.dao.repository.UserRoleRepository;
+import com.cqns.demo.dao.baserepository.BaseRepository;
+import com.cqns.demo.web.service.AbstractCommonService;
 import com.cqns.demo.web.vo.RoleVo;
 import com.cqns.demo.web.vo.UserRoleVo;
 import com.google.common.base.Strings;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleService extends AbstractCommonService<Role>{
+public class RoleService extends AbstractCommonService<Role> {
     private static Logger logger = LoggerFactory.getLogger(RoleService.class);
     @Resource
     private RoleMapper roleMapper;

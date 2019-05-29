@@ -6,6 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -120,6 +121,15 @@ public class JwtTokenUtil implements Serializable {
         NsUser nsUser = (NsUser) userDetails;
         String username = getUsernameFromToken(token);
         return (username.equals(nsUser.getUsername()) && !isTokenExpired(token));
+    }
+
+    /**
+     * 获取登录者的信息
+     */
+    public static UserDetails getUser() {
+        return (UserDetails)SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
     }
 
 }

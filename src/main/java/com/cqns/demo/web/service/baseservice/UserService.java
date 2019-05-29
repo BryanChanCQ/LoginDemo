@@ -1,12 +1,11 @@
-package com.cqns.demo.web.service;
+package com.cqns.demo.web.service.baseservice;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.cqns.demo.dao.entity.RoleResource;
+import com.cqns.demo.dao.entity.User;
 import com.cqns.demo.dao.repository.UserRepository;
 import com.cqns.demo.dao.baserepository.BaseRepository;
-import com.cqns.demo.dao.entity.User;
-import com.cqns.demo.web.vo.RoleResourceVo;
+import com.cqns.demo.web.service.AbstractCommonService;
 import com.cqns.demo.web.vo.RoleVo;
 import com.cqns.demo.web.vo.UserVo;
 import com.google.common.base.Preconditions;
@@ -28,7 +27,7 @@ import javax.persistence.criteria.Predicate;
 import java.util.List;
 
 @Service
-public class UserService extends AbstractCommonService<User>{
+public class UserService extends AbstractCommonService<User> {
     private static Logger logger = LoggerFactory.getLogger(UserService.class);
     @Resource
     private RoleService roleService;

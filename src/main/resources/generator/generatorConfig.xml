@@ -23,12 +23,13 @@
         <javaClientGenerator targetPackage="com.cqns.demo.dao.mapper" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table tableName="t_user_role" >
+        <table tableName="t_issue" >
             <property name="useActualColumnNames" value="false" />
             <!--mysql 配置-->
             <generatedKey column="id" sqlStatement="Mysql"/>
-            <!--<columnRenamingRule searchString="^T" replaceString=""/>-->
+            <!--<columnRenamingRule searchString="^f_" replaceString=""/>-->
             <domainObjectRenamingRule searchString="^T" replaceString="" />
+            <columnRenamingRule searchString="^f" replaceString="" />
         </table>
         
         

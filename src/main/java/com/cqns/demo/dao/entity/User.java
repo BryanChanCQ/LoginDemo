@@ -7,12 +7,12 @@ import java.sql.Timestamp;
 @Table(name = "t_user", schema = "cqns", catalog = "")
 public class User {
     private long id;
-    private String username;
-    private String displayName;
-    private String password;
-    private boolean enabled;
-    private Timestamp rawUpdateTime;
-    private Timestamp rawAddTime;
+    private String Username;
+    private String DisplayName;
+    private String Password;
+    private Boolean Enabled;
+    private Timestamp RawUpdateTime;
+    private Timestamp RawAddTime;
 
     @Id
     @Column(name = "id")
@@ -25,63 +25,63 @@ public class User {
     }
 
     @Basic
-    @Column(name = "username")
+    @Column(name = "f_username")
     public String getUsername() {
-        return username;
+        return Username;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        Username = username;
     }
 
     @Basic
-    @Column(name = "display_name")
+    @Column(name = "f_display_name")
     public String getDisplayName() {
-        return displayName;
+        return DisplayName;
     }
 
     public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+        DisplayName = displayName;
     }
 
     @Basic
-    @Column(name = "password")
+    @Column(name = "f_password")
     public String getPassword() {
-        return password;
+        return Password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        Password = password;
     }
 
     @Basic
-    @Column(name = "enabled")
-    public boolean getEnabled() {
-        return enabled;
+    @Column(name = "f_enabled")
+    public Boolean getEnabled() {
+        return Enabled;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setEnabled(Boolean enabled) {
+        Enabled = enabled;
     }
 
     @Basic
-    @Column(name = "raw_update_time")
+    @Column(name = "f_raw_update_time")
     public Timestamp getRawUpdateTime() {
-        return rawUpdateTime;
+        return RawUpdateTime;
     }
 
     public void setRawUpdateTime(Timestamp rawUpdateTime) {
-        this.rawUpdateTime = rawUpdateTime;
+        RawUpdateTime = rawUpdateTime;
     }
 
     @Basic
-    @Column(name = "raw_add_time")
+    @Column(name = "f_raw_add_time")
     public Timestamp getRawAddTime() {
-        return rawAddTime;
+        return RawAddTime;
     }
 
     public void setRawAddTime(Timestamp rawAddTime) {
-        this.rawAddTime = rawAddTime;
+        RawAddTime = rawAddTime;
     }
 
     @Override
@@ -92,13 +92,13 @@ public class User {
         User user = (User) o;
 
         if (id != user.id) return false;
-        if (enabled != user.enabled) return false;
-        if (username != null ? !username.equals(user.username) : user.username != null) return false;
-        if (displayName != null ? !displayName.equals(user.displayName) : user.displayName != null) return false;
-        if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        if (rawUpdateTime != null ? !rawUpdateTime.equals(user.rawUpdateTime) : user.rawUpdateTime != null)
+        if (Enabled != user.Enabled) return false;
+        if (Username != null ? !Username.equals(user.Username) : user.Username != null) return false;
+        if (DisplayName != null ? !DisplayName.equals(user.DisplayName) : user.DisplayName != null) return false;
+        if (Password != null ? !Password.equals(user.Password) : user.Password != null) return false;
+        if (RawUpdateTime != null ? !RawUpdateTime.equals(user.RawUpdateTime) : user.RawUpdateTime != null)
             return false;
-        if (rawAddTime != null ? !rawAddTime.equals(user.rawAddTime) : user.rawAddTime != null) return false;
+        if (RawAddTime != null ? !RawAddTime.equals(user.RawAddTime) : user.RawAddTime != null) return false;
 
         return true;
     }
@@ -106,12 +106,12 @@ public class User {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (displayName != null ? displayName.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (enabled ? 1 : 0);
-        result = 31 * result + (rawUpdateTime != null ? rawUpdateTime.hashCode() : 0);
-        result = 31 * result + (rawAddTime != null ? rawAddTime.hashCode() : 0);
+        result = 31 * result + (Username != null ? Username.hashCode() : 0);
+        result = 31 * result + (DisplayName != null ? DisplayName.hashCode() : 0);
+        result = 31 * result + (Password != null ? Password.hashCode() : 0);
+        result = 31 * result + (Enabled ? 1 : 0);
+        result = 31 * result + (RawUpdateTime != null ? RawUpdateTime.hashCode() : 0);
+        result = 31 * result + (RawAddTime != null ? RawAddTime.hashCode() : 0);
         return result;
     }
 }

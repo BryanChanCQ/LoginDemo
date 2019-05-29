@@ -1,14 +1,12 @@
-package com.cqns.demo.web.service;
+package com.cqns.demo.web.service.baseservice;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.cqns.demo.dao.mapper.UserRoleMapper;
+import com.cqns.demo.dao.entity.UserRole;
 import com.cqns.demo.dao.repository.UserRoleRepository;
 import com.cqns.demo.dao.baserepository.BaseRepository;
-import com.cqns.demo.dao.entity.UserRole;
-import com.cqns.demo.web.vo.MenuVo;
+import com.cqns.demo.web.service.AbstractCommonService;
 import com.cqns.demo.web.vo.UserRoleVo;
-import com.cqns.demo.web.vo.UserVo;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -119,14 +117,13 @@ public class UserRoleService extends AbstractCommonService<UserRole> {
             userRoles.forEach(userRole1 -> userRole1.setRoleName(userRole.getRoleName()));
 
             this.userRoleRepository.saveAll(userRoles);
+
             return true;
         }catch (Exception e) {
+
             logger.error("Error", e);
+
             return false;
         }
-
-
-
-
     }
 }

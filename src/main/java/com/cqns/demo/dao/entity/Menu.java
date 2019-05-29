@@ -7,15 +7,15 @@ import java.sql.Timestamp;
 @Table(name = "t_menu", schema = "cqns", catalog = "")
 public class Menu {
     private long id;
-    private String name;
-    private long parentId;
-    private String parentName;
-    private String icon;
-    private int orderNum;
-    private String url;
-    private Integer type;
-    private Timestamp rawUpdateTime;
-    private Timestamp rawAddTime;
+    private String Name;
+    private long ParentId;
+    private String ParentName;
+    private String Icon;
+    private int OrderNum;
+    private String Url;
+    private Integer Type;
+    private Timestamp RawUpdateTime;
+    private Timestamp RawAddTime;
 
     @Id
     @Column(name = "id")
@@ -28,93 +28,93 @@ public class Menu {
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "f_name")
     public String getName() {
-        return name;
+        return Name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        Name = name;
     }
 
     @Basic
-    @Column(name = "parent_id")
+    @Column(name = "f_parent_id")
     public long getParentId() {
-        return parentId;
+        return ParentId;
     }
 
     public void setParentId(long parentId) {
-        this.parentId = parentId;
+        ParentId = parentId;
     }
 
     @Basic
-    @Column(name = "parent_name")
+    @Column(name = "f_parent_name")
     public String getParentName() {
-        return parentName;
+        return ParentName;
     }
 
     public void setParentName(String parentName) {
-        this.parentName = parentName;
+        ParentName = parentName;
     }
 
     @Basic
-    @Column(name = "icon")
+    @Column(name = "f_icon")
     public String getIcon() {
-        return icon;
+        return Icon;
     }
 
     public void setIcon(String icon) {
-        this.icon = icon;
+        Icon = icon;
     }
 
     @Basic
-    @Column(name = "order_num")
+    @Column(name = "f_order_num")
     public int getOrderNum() {
-        return orderNum;
+        return OrderNum;
     }
 
     public void setOrderNum(int orderNum) {
-        this.orderNum = orderNum;
+        OrderNum = orderNum;
     }
 
     @Basic
-    @Column(name = "url")
+    @Column(name = "f_url")
     public String getUrl() {
-        return url;
+        return Url;
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        Url = url;
     }
 
     @Basic
-    @Column(name = "type")
+    @Column(name = "f_type")
     public Integer getType() {
-        return type;
+        return Type;
     }
 
     public void setType(Integer type) {
-        this.type = type;
+        Type = type;
     }
 
     @Basic
-    @Column(name = "raw_update_time")
+    @Column(name = "f_raw_update_time")
     public Timestamp getRawUpdateTime() {
-        return rawUpdateTime;
+        return RawUpdateTime;
     }
 
     public void setRawUpdateTime(Timestamp rawUpdateTime) {
-        this.rawUpdateTime = rawUpdateTime;
+        RawUpdateTime = rawUpdateTime;
     }
 
     @Basic
-    @Column(name = "raw_add_time")
+    @Column(name = "f_raw_add_time")
     public Timestamp getRawAddTime() {
-        return rawAddTime;
+        return RawAddTime;
     }
 
     public void setRawAddTime(Timestamp rawAddTime) {
-        this.rawAddTime = rawAddTime;
+        RawAddTime = rawAddTime;
     }
 
     @Override
@@ -125,16 +125,16 @@ public class Menu {
         Menu menu = (Menu) o;
 
         if (id != menu.id) return false;
-        if (parentId != menu.parentId) return false;
-        if (orderNum != menu.orderNum) return false;
-        if (name != null ? !name.equals(menu.name) : menu.name != null) return false;
-        if (parentName != null ? !parentName.equals(menu.parentName) : menu.parentName != null) return false;
-        if (icon != null ? !icon.equals(menu.icon) : menu.icon != null) return false;
-        if (url != null ? !url.equals(menu.url) : menu.url != null) return false;
-        if (type != null ? !type.equals(menu.type) : menu.type != null) return false;
-        if (rawUpdateTime != null ? !rawUpdateTime.equals(menu.rawUpdateTime) : menu.rawUpdateTime != null)
+        if (ParentId != menu.ParentId) return false;
+        if (OrderNum != menu.OrderNum) return false;
+        if (Name != null ? !Name.equals(menu.Name) : menu.Name != null) return false;
+        if (ParentName != null ? !ParentName.equals(menu.ParentName) : menu.ParentName != null) return false;
+        if (Icon != null ? !Icon.equals(menu.Icon) : menu.Icon != null) return false;
+        if (Url != null ? !Url.equals(menu.Url) : menu.Url != null) return false;
+        if (Type != null ? !Type.equals(menu.Type) : menu.Type != null) return false;
+        if (RawUpdateTime != null ? !RawUpdateTime.equals(menu.RawUpdateTime) : menu.RawUpdateTime != null)
             return false;
-        if (rawAddTime != null ? !rawAddTime.equals(menu.rawAddTime) : menu.rawAddTime != null) return false;
+        if (RawAddTime != null ? !RawAddTime.equals(menu.RawAddTime) : menu.RawAddTime != null) return false;
 
         return true;
     }
@@ -142,15 +142,15 @@ public class Menu {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (int) (parentId ^ (parentId >>> 32));
-        result = 31 * result + (parentName != null ? parentName.hashCode() : 0);
-        result = 31 * result + (icon != null ? icon.hashCode() : 0);
-        result = 31 * result + orderNum;
-        result = 31 * result + (url != null ? url.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (rawUpdateTime != null ? rawUpdateTime.hashCode() : 0);
-        result = 31 * result + (rawAddTime != null ? rawAddTime.hashCode() : 0);
+        result = 31 * result + (Name != null ? Name.hashCode() : 0);
+        result = 31 * result + (int) (ParentId ^ (ParentId >>> 32));
+        result = 31 * result + (ParentName != null ? ParentName.hashCode() : 0);
+        result = 31 * result + (Icon != null ? Icon.hashCode() : 0);
+        result = 31 * result + OrderNum;
+        result = 31 * result + (Url != null ? Url.hashCode() : 0);
+        result = 31 * result + (Type != null ? Type.hashCode() : 0);
+        result = 31 * result + (RawUpdateTime != null ? RawUpdateTime.hashCode() : 0);
+        result = 31 * result + (RawAddTime != null ? RawAddTime.hashCode() : 0);
         return result;
     }
 }

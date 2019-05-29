@@ -2,9 +2,8 @@ package com.cqns.demo.web.controller;
 
 import com.cqns.demo.dao.entity.*;
 import com.cqns.demo.utils.ResultInfo;
-import com.cqns.demo.web.service.*;
+import com.cqns.demo.web.service.baseservice.*;
 import com.cqns.demo.web.vo.*;
-import com.github.pagehelper.PageInfo;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -187,10 +186,11 @@ public class BaseController {
         }
     }
 
-    @RequestMapping(value = "/userRoleVoPageInfo", method = RequestMethod.POST)
+    @RequestMapping(value = "/userRoleVoPageInfo", consumes={"application/json"}, method = RequestMethod.POST)
     public ResultInfo<Page> userRoleVoPageInfo(@RequestBody UserRoleVo userRoleVo){
         return ResultInfo.create(Page.class).success(userRoleService.userRoleVoPageInfo(userRoleVo));
     }
+
 
     @RequestMapping(value = "/roleVoListForOther", method = RequestMethod.POST)
     public ResultInfo<List> roleVoListForOther(@RequestBody UserRoleVo userRoleVo){

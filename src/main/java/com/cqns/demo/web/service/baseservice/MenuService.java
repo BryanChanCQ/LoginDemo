@@ -1,12 +1,13 @@
-package com.cqns.demo.web.service;
+package com.cqns.demo.web.service.baseservice;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.cqns.demo.dao.repository.MenuRepository;
-import com.cqns.demo.dao.baserepository.BaseRepository;
 import com.cqns.demo.dao.entity.Menu;
 import com.cqns.demo.dao.entity.RoleResource;
 import com.cqns.demo.dao.mapper.MenuMapper;
+import com.cqns.demo.dao.repository.MenuRepository;
+import com.cqns.demo.dao.baserepository.BaseRepository;
+import com.cqns.demo.web.service.AbstractCommonService;
 import com.cqns.demo.web.vo.MenuVo;
 import com.cqns.demo.web.vo.RoleResourceVo;
 import com.google.common.base.Strings;
@@ -27,7 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class MenuService extends AbstractCommonService<Menu>{
+public class MenuService extends AbstractCommonService<Menu> {
     private static Logger logger = LoggerFactory.getLogger(MenuService.class);
 
     @Resource

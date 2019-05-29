@@ -1,8 +1,8 @@
-package com.cqns.demo.web.service;
+package com.cqns.demo.web.service.baseservice;
 
+import com.cqns.demo.dao.entity.User;
 import com.cqns.demo.dao.repository.UserRepository;
 import com.cqns.demo.dao.entity.NsUser;
-import com.cqns.demo.dao.entity.User;
 import com.cqns.demo.utils.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

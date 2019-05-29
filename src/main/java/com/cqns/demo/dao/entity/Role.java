@@ -7,9 +7,9 @@ import java.sql.Timestamp;
 @Table(name = "t_role", schema = "cqns", catalog = "")
 public class Role {
     private long id;
-    private String name;
-    private Timestamp rawUpdateTime;
-    private Timestamp rawAddTime;
+    private String Name;
+    private Timestamp RawUpdateTime;
+    private Timestamp RawAddTime;
 
     @Id
     @Column(name = "id")
@@ -22,33 +22,33 @@ public class Role {
     }
 
     @Basic
-    @Column(name = "name")
+    @Column(name = "f_name")
     public String getName() {
-        return name;
+        return Name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        Name = name;
     }
 
     @Basic
-    @Column(name = "raw_update_time")
+    @Column(name = "f_raw_update_time")
     public Timestamp getRawUpdateTime() {
-        return rawUpdateTime;
+        return RawUpdateTime;
     }
 
     public void setRawUpdateTime(Timestamp rawUpdateTime) {
-        this.rawUpdateTime = rawUpdateTime;
+        RawUpdateTime = rawUpdateTime;
     }
 
     @Basic
-    @Column(name = "raw_add_time")
+    @Column(name = "f_raw_add_time")
     public Timestamp getRawAddTime() {
-        return rawAddTime;
+        return RawAddTime;
     }
 
     public void setRawAddTime(Timestamp rawAddTime) {
-        this.rawAddTime = rawAddTime;
+        RawAddTime = rawAddTime;
     }
 
     @Override
@@ -59,10 +59,10 @@ public class Role {
         Role role = (Role) o;
 
         if (id != role.id) return false;
-        if (name != null ? !name.equals(role.name) : role.name != null) return false;
-        if (rawUpdateTime != null ? !rawUpdateTime.equals(role.rawUpdateTime) : role.rawUpdateTime != null)
+        if (Name != null ? !Name.equals(role.Name) : role.Name != null) return false;
+        if (RawUpdateTime != null ? !RawUpdateTime.equals(role.RawUpdateTime) : role.RawUpdateTime != null)
             return false;
-        if (rawAddTime != null ? !rawAddTime.equals(role.rawAddTime) : role.rawAddTime != null) return false;
+        if (RawAddTime != null ? !RawAddTime.equals(role.RawAddTime) : role.RawAddTime != null) return false;
 
         return true;
     }
@@ -70,9 +70,9 @@ public class Role {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (rawUpdateTime != null ? rawUpdateTime.hashCode() : 0);
-        result = 31 * result + (rawAddTime != null ? rawAddTime.hashCode() : 0);
+        result = 31 * result + (Name != null ? Name.hashCode() : 0);
+        result = 31 * result + (RawUpdateTime != null ? RawUpdateTime.hashCode() : 0);
+        result = 31 * result + (RawAddTime != null ? RawAddTime.hashCode() : 0);
         return result;
     }
 }

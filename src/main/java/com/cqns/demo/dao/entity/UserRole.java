@@ -7,12 +7,12 @@ import java.sql.Timestamp;
 @Table(name = "t_user_role", schema = "cqns", catalog = "")
 public class UserRole {
     private long id;
-    private long userId;
-    private long roleId;
-    private String userName;
-    private String roleName;
-    private Timestamp rawUpdateTime;
-    private Timestamp rawAddTime;
+    private long UserId;
+    private long RoleId;
+    private String UserName;
+    private String RoleName;
+    private Timestamp RawUpdateTime;
+    private Timestamp RawAddTime;
 
     @Id
     @Column(name = "id")
@@ -25,63 +25,63 @@ public class UserRole {
     }
 
     @Basic
-    @Column(name = "user_id")
+    @Column(name = "f_user_id")
     public long getUserId() {
-        return userId;
+        return UserId;
     }
 
     public void setUserId(long userId) {
-        this.userId = userId;
+        UserId = userId;
     }
 
     @Basic
-    @Column(name = "role_id")
+    @Column(name = "f_role_id")
     public long getRoleId() {
-        return roleId;
+        return RoleId;
     }
 
     public void setRoleId(long roleId) {
-        this.roleId = roleId;
+        RoleId = roleId;
     }
 
     @Basic
-    @Column(name = "user_name")
+    @Column(name = "f_user_name")
     public String getUserName() {
-        return userName;
+        return UserName;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        UserName = userName;
     }
 
     @Basic
-    @Column(name = "role_name")
+    @Column(name = "f_role_name")
     public String getRoleName() {
-        return roleName;
+        return RoleName;
     }
 
     public void setRoleName(String roleName) {
-        this.roleName = roleName;
+        RoleName = roleName;
     }
 
     @Basic
-    @Column(name = "raw_update_time")
+    @Column(name = "f_raw_update_time")
     public Timestamp getRawUpdateTime() {
-        return rawUpdateTime;
+        return RawUpdateTime;
     }
 
     public void setRawUpdateTime(Timestamp rawUpdateTime) {
-        this.rawUpdateTime = rawUpdateTime;
+        RawUpdateTime = rawUpdateTime;
     }
 
     @Basic
-    @Column(name = "raw_add_time")
+    @Column(name = "f_raw_add_time")
     public Timestamp getRawAddTime() {
-        return rawAddTime;
+        return RawAddTime;
     }
 
     public void setRawAddTime(Timestamp rawAddTime) {
-        this.rawAddTime = rawAddTime;
+        RawAddTime = rawAddTime;
     }
 
     @Override
@@ -92,13 +92,13 @@ public class UserRole {
         UserRole userRole = (UserRole) o;
 
         if (id != userRole.id) return false;
-        if (userId != userRole.userId) return false;
-        if (roleId != userRole.roleId) return false;
-        if (userName != null ? !userName.equals(userRole.userName) : userRole.userName != null) return false;
-        if (roleName != null ? !roleName.equals(userRole.roleName) : userRole.roleName != null) return false;
-        if (rawUpdateTime != null ? !rawUpdateTime.equals(userRole.rawUpdateTime) : userRole.rawUpdateTime != null)
+        if (UserId != userRole.UserId) return false;
+        if (RoleId != userRole.RoleId) return false;
+        if (UserName != null ? !UserName.equals(userRole.UserName) : userRole.UserName != null) return false;
+        if (RoleName != null ? !RoleName.equals(userRole.RoleName) : userRole.RoleName != null) return false;
+        if (RawUpdateTime != null ? !RawUpdateTime.equals(userRole.RawUpdateTime) : userRole.RawUpdateTime != null)
             return false;
-        if (rawAddTime != null ? !rawAddTime.equals(userRole.rawAddTime) : userRole.rawAddTime != null) return false;
+        if (RawAddTime != null ? !RawAddTime.equals(userRole.RawAddTime) : userRole.RawAddTime != null) return false;
 
         return true;
     }
@@ -106,12 +106,12 @@ public class UserRole {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (userId ^ (userId >>> 32));
-        result = 31 * result + (int) (roleId ^ (roleId >>> 32));
-        result = 31 * result + (userName != null ? userName.hashCode() : 0);
-        result = 31 * result + (roleName != null ? roleName.hashCode() : 0);
-        result = 31 * result + (rawUpdateTime != null ? rawUpdateTime.hashCode() : 0);
-        result = 31 * result + (rawAddTime != null ? rawAddTime.hashCode() : 0);
+        result = 31 * result + (int) (UserId ^ (UserId >>> 32));
+        result = 31 * result + (int) (RoleId ^ (RoleId >>> 32));
+        result = 31 * result + (UserName != null ? UserName.hashCode() : 0);
+        result = 31 * result + (RoleName != null ? RoleName.hashCode() : 0);
+        result = 31 * result + (RawUpdateTime != null ? RawUpdateTime.hashCode() : 0);
+        result = 31 * result + (RawAddTime != null ? RawAddTime.hashCode() : 0);
         return result;
     }
 }

@@ -7,14 +7,14 @@ import java.sql.Timestamp;
 @Table(name = "t_role_resource", schema = "cqns", catalog = "")
 public class RoleResource {
     private long id;
-    private long roleId;
-    private long resourceId;
-    private Integer resourceType;
-    private String resourceName;
-    private Timestamp rawUpdateTime;
-    private Timestamp rawAddTime;
-    private String roleName;
-    private String resourceTypeName;
+    private long RoleId;
+    private long ResourceId;
+    private Integer ResourceType;
+    private String ResourceName;
+    private Timestamp RawUpdateTime;
+    private Timestamp RawAddTime;
+    private String RoleName;
+    private String ResourceTypeName;
 
     @Id
     @Column(name = "id")
@@ -27,83 +27,83 @@ public class RoleResource {
     }
 
     @Basic
-    @Column(name = "role_id")
+    @Column(name = "f_role_id")
     public long getRoleId() {
-        return roleId;
+        return RoleId;
     }
 
     public void setRoleId(long roleId) {
-        this.roleId = roleId;
+        RoleId = roleId;
     }
 
     @Basic
-    @Column(name = "resource_id")
+    @Column(name = "f_resource_id")
     public long getResourceId() {
-        return resourceId;
+        return ResourceId;
     }
 
     public void setResourceId(long resourceId) {
-        this.resourceId = resourceId;
+        ResourceId = resourceId;
     }
 
     @Basic
-    @Column(name = "resource_type")
+    @Column(name = "f_resource_type")
     public Integer getResourceType() {
-        return resourceType;
+        return ResourceType;
     }
 
     public void setResourceType(Integer resourceType) {
-        this.resourceType = resourceType;
+        ResourceType = resourceType;
     }
 
     @Basic
-    @Column(name = "resource_name")
+    @Column(name = "f_resource_name")
     public String getResourceName() {
-        return resourceName;
+        return ResourceName;
     }
 
     public void setResourceName(String resourceName) {
-        this.resourceName = resourceName;
+        ResourceName = resourceName;
     }
 
     @Basic
-    @Column(name = "raw_update_time")
+    @Column(name = "f_raw_update_time")
     public Timestamp getRawUpdateTime() {
-        return rawUpdateTime;
+        return RawUpdateTime;
     }
 
     public void setRawUpdateTime(Timestamp rawUpdateTime) {
-        this.rawUpdateTime = rawUpdateTime;
+        RawUpdateTime = rawUpdateTime;
     }
 
     @Basic
-    @Column(name = "raw_add_time")
+    @Column(name = "f_raw_add_time")
     public Timestamp getRawAddTime() {
-        return rawAddTime;
+        return RawAddTime;
     }
 
     public void setRawAddTime(Timestamp rawAddTime) {
-        this.rawAddTime = rawAddTime;
+        RawAddTime = rawAddTime;
     }
 
     @Basic
-    @Column(name = "role_name")
+    @Column(name = "f_role_name")
     public String getRoleName() {
-        return roleName;
+        return RoleName;
     }
 
     public void setRoleName(String roleName) {
-        this.roleName = roleName;
+        RoleName = roleName;
     }
 
     @Basic
-    @Column(name = "resource_type_name")
+    @Column(name = "f_resource_type_name")
     public String getResourceTypeName() {
-        return resourceTypeName;
+        return ResourceTypeName;
     }
 
     public void setResourceTypeName(String resourceTypeName) {
-        this.resourceTypeName = resourceTypeName;
+        ResourceTypeName = resourceTypeName;
     }
 
     @Override
@@ -114,15 +114,15 @@ public class RoleResource {
         RoleResource that = (RoleResource) o;
 
         if (id != that.id) return false;
-        if (roleId != that.roleId) return false;
-        if (resourceId != that.resourceId) return false;
-        if (resourceType != null ? !resourceType.equals(that.resourceType) : that.resourceType != null) return false;
-        if (resourceName != null ? !resourceName.equals(that.resourceName) : that.resourceName != null) return false;
-        if (rawUpdateTime != null ? !rawUpdateTime.equals(that.rawUpdateTime) : that.rawUpdateTime != null)
+        if (RoleId != that.RoleId) return false;
+        if (ResourceId != that.ResourceId) return false;
+        if (ResourceType != null ? !ResourceType.equals(that.ResourceType) : that.ResourceType != null) return false;
+        if (ResourceName != null ? !ResourceName.equals(that.ResourceName) : that.ResourceName != null) return false;
+        if (RawUpdateTime != null ? !RawUpdateTime.equals(that.RawUpdateTime) : that.RawUpdateTime != null)
             return false;
-        if (rawAddTime != null ? !rawAddTime.equals(that.rawAddTime) : that.rawAddTime != null) return false;
-        if (roleName != null ? !roleName.equals(that.roleName) : that.roleName != null) return false;
-        if (resourceTypeName != null ? !resourceTypeName.equals(that.resourceTypeName) : that.resourceTypeName != null)
+        if (RawAddTime != null ? !RawAddTime.equals(that.RawAddTime) : that.RawAddTime != null) return false;
+        if (RoleName != null ? !RoleName.equals(that.RoleName) : that.RoleName != null) return false;
+        if (ResourceTypeName != null ? !ResourceTypeName.equals(that.ResourceTypeName) : that.ResourceTypeName != null)
             return false;
 
         return true;
@@ -131,14 +131,14 @@ public class RoleResource {
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (roleId ^ (roleId >>> 32));
-        result = 31 * result + (int) (resourceId ^ (resourceId >>> 32));
-        result = 31 * result + (resourceType != null ? resourceType.hashCode() : 0);
-        result = 31 * result + (resourceName != null ? resourceName.hashCode() : 0);
-        result = 31 * result + (rawUpdateTime != null ? rawUpdateTime.hashCode() : 0);
-        result = 31 * result + (rawAddTime != null ? rawAddTime.hashCode() : 0);
-        result = 31 * result + (roleName != null ? roleName.hashCode() : 0);
-        result = 31 * result + (resourceTypeName != null ? resourceTypeName.hashCode() : 0);
+        result = 31 * result + (int) (RoleId ^ (RoleId >>> 32));
+        result = 31 * result + (int) (ResourceId ^ (ResourceId >>> 32));
+        result = 31 * result + (ResourceType != null ? ResourceType.hashCode() : 0);
+        result = 31 * result + (ResourceName != null ? ResourceName.hashCode() : 0);
+        result = 31 * result + (RawUpdateTime != null ? RawUpdateTime.hashCode() : 0);
+        result = 31 * result + (RawAddTime != null ? RawAddTime.hashCode() : 0);
+        result = 31 * result + (RoleName != null ? RoleName.hashCode() : 0);
+        result = 31 * result + (ResourceTypeName != null ? ResourceTypeName.hashCode() : 0);
         return result;
     }
 }
