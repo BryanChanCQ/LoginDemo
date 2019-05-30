@@ -1,5 +1,6 @@
 package com.cqns.demo.web.controller;
 
+import com.alibaba.fastjson.util.IOUtils;
 import com.cqns.demo.dao.entity.Issue;
 import com.cqns.demo.dao.entity.IssueAttachment;
 import com.cqns.demo.dao.repository.IssueAttachmentRepository;
@@ -11,6 +12,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mysql.cj.util.StringUtils;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -23,8 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -37,8 +40,10 @@ import java.util.*;
 @CrossOrigin
 @RequestMapping(value = "/Issue")
 public class IssueController {
+
     private static Logger logger = LoggerFactory.getLogger(IssueController.class);
-    private final String uploadPath = "D:\\test";
+
+    private final String uploadPath = "/Users/bryanchan/uploadFile";
     @Resource
     private IssueService issueService;
     @Resource
@@ -173,6 +178,78 @@ public class IssueController {
 
         }
 
+    }
+
+    @RequestMapping(value = "/getUploadFileList", method = RequestMethod.GET)
+    public ResultInfo<List> getUploadFileList(String issueIdentifier){
+
+        return ResultInfo.create(List.class).success(this.issueService.getUploadFileList(issueIdentifier));
+
+    }
+
+    @RequestMapping(value = "/deleteUploadFile", method = RequestMethod.GET)
+    public void deleteUploadFile(String fileUrl, long id){
+
+        File deleteFile = new File(fileUrl);
+
+        this.issueAttachmentRepository.deleteById(id);
+
+        if (deleteFile.isFile() && deleteFile.exists()) {
+
+            deleteFile.delete();
+
+        }
+
+    }
+
+    @RequestMapping(value = "/downloadAttachmentFile", method = RequestMethod.GET)
+    public void downloadAttachmentFile(String fileUrl, HttpServletResponse response) throws IOException {
+
+        String fileName;
+
+        if(fileUrl.contains("/")) {
+
+            fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+
+        } else {
+
+            fileName = fileUrl;
+
+        }
+
+        response.setContentType("application/octet-stream;charset=utf-8");
+
+        response.addHeader("Content-Disposition", " attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+
+        FileInputStream fis = null;
+
+        BufferedInputStream bis = null;
+
+        try {
+            byte[] buffer = new byte[1024];
+
+            fis = new FileInputStream(fileUrl);
+
+            bis = new BufferedInputStream(fis);
+
+            OutputStream os = response.getOutputStream();
+
+            int i = bis.read(buffer);
+
+            while (i != -1) {
+                System.out.println(buffer);
+                os.write(buffer, 0, i);
+
+                i = bis.read(buffer);
+            }
+
+            os.flush();
+        } finally {
+
+            IOUtils.close(fis);
+
+            IOUtils.close(bis);
+        }
     }
 
 }
