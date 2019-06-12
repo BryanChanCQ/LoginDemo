@@ -13,6 +13,6 @@ import org.activiti.engine.delegate.TaskListener;
 public class deptListener implements TaskListener {
     @Override
     public void notify(DelegateTask delegateTask) {
-        delegateTask.addCandidateUsers(Lists.newArrayList("bryan"));
+        delegateTask.addCandidateUsers(Lists.newArrayList("kjyw"));
     }
 }

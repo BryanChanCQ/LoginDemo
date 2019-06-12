@@ -4,16 +4,8 @@
     <startEvent id="startevent1" name="Start"></startEvent>
     <userTask id="usertask1" name="提交问题" activiti:assignee="${submitPerson}"></userTask>
     <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
-    <userTask id="usertask2" name="支行解决">
-      <extensionElements>
-        <activiti:taskListener event="create" class="com.cqns.demo.web.listener.BankStaffListener"></activiti:taskListener>
-      </extensionElements>
-    </userTask>
-    <userTask id="usertask3" name="科技部解决">
-      <extensionElements>
-        <activiti:taskListener event="create" class="com.cqns.demo.web.listener.deptListener"></activiti:taskListener>
-      </extensionElements>
-    </userTask>
+    <userTask id="usertask2" name="支行解决" activiti:assignee="${handleEventStaff}"></userTask>
+    <userTask id="usertask3" name="科技部解决" activiti:assignee="${handleEventStaff}"></userTask>
     <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
     <endEvent id="endevent1" name="End"></endEvent>
     <sequenceFlow id="flow5" sourceRef="usertask3" targetRef="endevent1"></sequenceFlow>
@@ -25,6 +17,7 @@
     <sequenceFlow id="flow10" sourceRef="exclusivegateway1" targetRef="usertask3">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${code==1}]]></conditionExpression>
     </sequenceFlow>
+    <userTask id="usertask4" name="User Task"></userTask>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_issueProcess">
     <bpmndi:BPMNPlane bpmnElement="issueProcess" id="BPMNPlane_issueProcess">
@@ -45,6 +38,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="670.0" y="121.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask4" id="BPMNShape_usertask4">
+        <omgdc:Bounds height="55.0" width="105.0" x="330.0" y="420.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
         <omgdi:waypoint x="125.0" y="137.0"></omgdi:waypoint>

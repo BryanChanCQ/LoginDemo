@@ -6,9 +6,9 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "t_menu", schema = "cqns", catalog = "")
 public class Menu {
-    private long id;
+    private Long id;
     private String Name;
-    private long ParentId;
+    private Long ParentId;
     private String ParentName;
     private String Icon;
     private int OrderNum;
@@ -19,11 +19,12 @@ public class Menu {
 
     @Id
     @Column(name = "id")
-    public long getId() {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -39,11 +40,11 @@ public class Menu {
 
     @Basic
     @Column(name = "f_parent_id")
-    public long getParentId() {
+    public Long getParentId() {
         return ParentId;
     }
 
-    public void setParentId(long parentId) {
+    public void setParentId(Long parentId) {
         ParentId = parentId;
     }
 

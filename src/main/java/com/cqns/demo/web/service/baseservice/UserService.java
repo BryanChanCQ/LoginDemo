@@ -48,9 +48,9 @@ public class UserService extends AbstractCommonService<User> {
                 predicates.add(criteriaBuilder.like(root.get("displayName"), "%" + userVo.getDisplayName() + "%"));
 
             }
-            if (!Strings.isNullOrEmpty(userVo.getUsername())){
+            if (!Strings.isNullOrEmpty(userVo.getUserName())){
 
-                predicates.add(criteriaBuilder.equal(root.get("username"), userVo.getUsername()));
+                predicates.add(criteriaBuilder.equal(root.get("username"), userVo.getUserName()));
 
             }
 
@@ -76,9 +76,9 @@ public class UserService extends AbstractCommonService<User> {
 
             }
 
-            if (!Strings.isNullOrEmpty(userVo.getUsername())){
+            if (!Strings.isNullOrEmpty(userVo.getUserName())){
 
-                predicates.add(criteriaBuilder.like(root.get("username"),"%" + userVo.getUsername() + "%"));
+                predicates.add(criteriaBuilder.like(root.get("username"),"%" + userVo.getUserName() + "%"));
 
             }
 
@@ -86,7 +86,7 @@ public class UserService extends AbstractCommonService<User> {
 
         };
 
-        Pageable pageable = new PageRequest(userVo.getPage(), userVo.getPageSize(), Sort.Direction.DESC, "rawUpdateTime");
+        Pageable pageable = new PageRequest(userVo.getPage(), userVo.getPageSize(), Sort.Direction.DESC, "lastUpdate");
 
         Page<UserVo> page = this.userRepository.findAll(specification,pageable);
 
@@ -110,7 +110,7 @@ public class UserService extends AbstractCommonService<User> {
 
         Preconditions.checkNotNull(userName, "用户名不能为为空");
 
-        User user = this.userRepository.findByUsername(userName);
+        User user = this.userRepository.findByUserName(userName);
 
         UserVo userVO = new UserVo();
 

@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "t_issue", schema = "cqns", catalog = "")
 public class Issue {
-    private long id;
+    private Long id;
     private String IssueTitle;
     private String IssueIdentifier;
     private String IssueReporter;
@@ -25,11 +25,12 @@ public class Issue {
 
     @Id
     @Column(name = "id")
-    public long getId() {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

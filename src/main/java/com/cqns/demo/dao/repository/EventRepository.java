@@ -1,6 +1,7 @@
 package com.cqns.demo.dao.repository;
 
 import com.cqns.demo.dao.baserepository.BaseRepository;
+import com.cqns.demo.dao.entity.Event;
 import com.cqns.demo.dao.entity.Issue;
 
 /**
@@ -9,5 +10,5 @@ import com.cqns.demo.dao.entity.Issue;
  * @CreatedFor CRCBank
  * @Version 1.0
  */
-public interface IssueRepository extends BaseRepository<Issue> {
+public interface EventRepository extends BaseRepository<Event> {
 }

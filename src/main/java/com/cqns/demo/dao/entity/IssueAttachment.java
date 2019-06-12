@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "t_issue_attachment", schema = "cqns", catalog = "")
 public class IssueAttachment {
-    private long id;
+    private Long id;
     private String IssueIdentifier;
     private String AttachmentName;
     private String AttachmentPath;
@@ -17,11 +17,12 @@ public class IssueAttachment {
 
     @Id
     @Column(name = "id")
-    public long getId() {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

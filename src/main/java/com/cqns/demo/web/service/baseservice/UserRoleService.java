@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserRoleService extends AbstractCommonService<UserRole> {
@@ -51,7 +52,7 @@ public class UserRoleService extends AbstractCommonService<UserRole> {
 
             }
 
-            if (!Strings.isNullOrEmpty(String.valueOf(userRoleVo.getUserId()))){
+            if (Objects.nonNull(userRoleVo.getUserId())){
 
                 predicates.add(criteriaBuilder.equal(root.get("userId"), userRoleVo.getUserId()));
 

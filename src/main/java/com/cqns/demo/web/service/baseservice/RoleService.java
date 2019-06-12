@@ -51,6 +51,13 @@ public class RoleService extends AbstractCommonService<Role> {
         return JSON.parseObject(JSON.toJSONString(roles), new TypeReference<List<RoleVo>>(){}.getType());
     }
 
+    public List<RoleVo> roleVoList() {
+
+        List<Role> roles = this.roleRepository.findAll();
+
+        return JSON.parseObject(JSON.toJSONString(roles), new TypeReference<List<RoleVo>>(){}.getType());
+    }
+
     public Page<RoleVo> roleVoPageInfo(RoleVo roleVo){
 
         Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
@@ -67,7 +74,7 @@ public class RoleService extends AbstractCommonService<Role> {
 
         };
 
-        Pageable pageable = new PageRequest(roleVo.getPage(), roleVo.getPageSize(), Sort.Direction.ASC, "rawUpdateTime");
+        Pageable pageable = new PageRequest(roleVo.getPage(), roleVo.getPageSize(), Sort.Direction.DESC, "rawUpdateTime");
 
         Page<RoleVo> page = this.roleRepository.findAll(specification,pageable);
 
@@ -94,6 +101,29 @@ public class RoleService extends AbstractCommonService<Role> {
                 if (!Iterables.isEmpty(ids))
 
                     predicates.add(criteriaBuilder.not(root.get("id").in(ids)));
+
+            }
+
+            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+
+        };
+
+        List<Role> roles = this.roleRepository.findAll(specification);
+
+        return JSON.parseObject(JSON.toJSONString(roles), new TypeReference<List<RoleVo>>(){}.getType());
+
+    }
+
+    public List<RoleVo> parentRoleVoList(RoleVo roleVo){
+
+
+        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
+
+            List<Predicate> predicates = Lists.newArrayList();
+
+            if (!Strings.isNullOrEmpty(String.valueOf(roleVo.getParentId()))){
+
+                predicates.add(criteriaBuilder.equal(root.get("parentId"), roleVo.getParentId()));
 
             }
 

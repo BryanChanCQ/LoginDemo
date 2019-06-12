@@ -1,6 +1,7 @@
 package com.cqns.demo.web.controller;
 
 import com.cqns.demo.dao.entity.*;
+import com.cqns.demo.utils.JwtTokenUtil;
 import com.cqns.demo.utils.ResultInfo;
 import com.cqns.demo.web.service.baseservice.*;
 import com.cqns.demo.web.vo.*;
@@ -27,6 +28,8 @@ public class BaseController {
     private MenuService menuService;
     @Resource
     private RoleService roleService;
+    @Resource
+    private DictionaryService dictionaryService;
     @Resource
     private RoleResourceService roleResourceService;
     @Resource
@@ -186,6 +189,11 @@ public class BaseController {
         }
     }
 
+    @RequestMapping(value = {"/queryParentRole"}, method = {RequestMethod.GET})
+    public ResultInfo<List> queryParentRole(){
+        return ResultInfo.create(List.class).success(this.roleService.roleVoList());
+    }
+
     @RequestMapping(value = "/userRoleVoPageInfo", consumes={"application/json"}, method = RequestMethod.POST)
     public ResultInfo<Page> userRoleVoPageInfo(@RequestBody UserRoleVo userRoleVo){
         return ResultInfo.create(Page.class).success(userRoleService.userRoleVoPageInfo(userRoleVo));
@@ -263,5 +271,50 @@ public class BaseController {
             logger.error("Error", e);
             throw new RuntimeException(e.getCause());
         }
+    }
+
+    @RequestMapping(value = {"/queryParentDictionary"}, method = {RequestMethod.POST})
+    public ResultInfo<List> queryParentDictionary(@RequestBody DictionaryVo dictionaryVo){
+        return ResultInfo.create(List.class).success(this.dictionaryService.parentDictionaryVoList(dictionaryVo));
+    }
+
+    @RequestMapping(value = "/dictionaryVoPageInfo", method = RequestMethod.POST)
+    public ResultInfo<Page> dictionaryVoPageInfo(@RequestBody DictionaryVo dictionaryVo){
+        return ResultInfo.create(Page.class).success(this.dictionaryService.dictionaryVoPageInfo(dictionaryVo));
+    }
+
+    @RequestMapping(value = {"/addDictionary"}, method = {RequestMethod.POST})
+    public  ResultInfo<Void> addDictionary(@RequestBody Dictionary dictionary){
+        try{
+            return this.dictionaryService.insert(dictionary) ?
+                    ResultInfo.create().success().setMsg("添加成功") :
+                    ResultInfo.create().fail("添加失败");
+        }catch (Exception e){
+            logger.error("Error", e);
+            throw new RuntimeException(e.getCause());
+        }
+    }
+
+    @RequestMapping(value = {"/deleteDictionaryById"}, method = {RequestMethod.GET})
+    public ResultInfo<Void> deleteDictionaryById(Long id){
+        Preconditions.checkNotNull(id, "Id不能为空");
+        try{
+            return this.dictionaryService.deleteById(id) ?
+                    ResultInfo.create().success().setMsg("删除成功") :
+                    ResultInfo.create().fail("删除失败");
+        }catch (Exception e){
+            logger.error("Error", e);
+            throw new RuntimeException(e.getCause());
+        }
+    }
+
+    @RequestMapping(value = {"/updateDictionaryById"}, method = {RequestMethod.POST})
+    public ResultInfo<Void> updateDictionaryById(@RequestBody Dictionary dictionary){
+
+        Preconditions.checkNotNull(dictionary.getId(), "Id不能为空");
+
+        return this.dictionaryService.updateById(dictionary) ?
+                ResultInfo.create().success().setMsg("更新成功") :
+                ResultInfo.create().fail("更新失败");
     }
 }

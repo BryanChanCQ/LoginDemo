@@ -31,7 +31,8 @@ public class BaseService implements UserDetailsService  {
     private UserRepository userRepository;
 
     public String login(String username, String password) {
-try{
+
+   try{
     UsernamePasswordAuthenticationToken upToken = new UsernamePasswordAuthenticationToken(username, password);
 
     Authentication authentication = authenticationManager.authenticate(upToken);
@@ -63,11 +64,11 @@ try{
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User sysUser = this.userRepository.findByUsername(username);
+        User sysUser = this.userRepository.findByUserName(username);
 
         if (Objects.nonNull(sysUser)) {
 
-            return new NsUser(sysUser.getId(), sysUser.getUsername(), sysUser.getPassword(), sysUser.getDisplayName(), sysUser.getEnabled(), true, true, true, AuthorityUtils.NO_AUTHORITIES);
+            return new NsUser(sysUser.getId(), sysUser.getUserName(), sysUser.getPassword(), sysUser.getDisplayName(), sysUser.getEnabled(), true, true, true, AuthorityUtils.NO_AUTHORITIES);
 
         } else {
 

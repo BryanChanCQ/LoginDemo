@@ -6,9 +6,9 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "t_role_resource", schema = "cqns", catalog = "")
 public class RoleResource {
-    private long id;
-    private long RoleId;
-    private long ResourceId;
+    private Long id;
+    private Long RoleId;
+    private Long ResourceId;
     private Integer ResourceType;
     private String ResourceName;
     private Timestamp RawUpdateTime;
@@ -18,31 +18,32 @@ public class RoleResource {
 
     @Id
     @Column(name = "id")
-    public long getId() {
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "f_role_id")
-    public long getRoleId() {
+    public Long getRoleId() {
         return RoleId;
     }
 
-    public void setRoleId(long roleId) {
+    public void setRoleId(Long roleId) {
         RoleId = roleId;
     }
 
     @Basic
     @Column(name = "f_resource_id")
-    public long getResourceId() {
+    public Long getResourceId() {
         return ResourceId;
     }
 
-    public void setResourceId(long resourceId) {
+    public void setResourceId(Long resourceId) {
         ResourceId = resourceId;
     }
 
