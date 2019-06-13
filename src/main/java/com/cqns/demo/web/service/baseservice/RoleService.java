@@ -114,27 +114,4 @@ public class RoleService extends AbstractCommonService<Role> {
 
     }
 
-    public List<RoleVo> parentRoleVoList(RoleVo roleVo){
-
-
-        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
-
-            List<Predicate> predicates = Lists.newArrayList();
-
-            if (!Strings.isNullOrEmpty(String.valueOf(roleVo.getParentId()))){
-
-                predicates.add(criteriaBuilder.equal(root.get("parentId"), roleVo.getParentId()));
-
-            }
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
-
-        };
-
-        List<Role> roles = this.roleRepository.findAll(specification);
-
-        return JSON.parseObject(JSON.toJSONString(roles), new TypeReference<List<RoleVo>>(){}.getType());
-
-    }
-
 }

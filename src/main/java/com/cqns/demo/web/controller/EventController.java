@@ -381,51 +381,51 @@ public class EventController {
                 .success(this.dictionaryRepository.findDictionaryByParentId(this.dictionaryRepository.findDictionaryByKey(key).getId()));
     }
 
-    @RequestMapping(value = "/queryHandleEventGroup", method = RequestMethod.GET)
-    public ResultInfo<List> queryHandleEventGroup(Long institutionId, String rank) {
-
-        List<RoleVo> handleEventGroups = Lists.newArrayList();
-
-        if (Objects.nonNull(institutionId)) {
-
-            //事件创建人选了提出事件机构，查询的上级别处理部门
-            Role role = this.roleService.selectById(this.roleService.selectById(institutionId).get().getParentId()).get();
-
-            RoleVo roleVo = new RoleVo();
-
-            BeanUtils.copyProperties(role, roleVo);
-
-            handleEventGroups.add(roleVo);
-
-        } else {
-
-            if ("same".equalsIgnoreCase(rank)) {
-                //转办查询同级别
-                List<RoleVo> role = this.roleService.queryRolesByUserName(JwtTokenUtil.getUser().getUsername());
-
-                handleEventGroups.addAll(role);
-            }
-
-            if ("parent".equalsIgnoreCase(rank)) {
-
-                List<RoleVo> role = this.roleService.queryRolesByUserName(JwtTokenUtil.getUser().getUsername());
-
-                //移交上级查询上级别部门
-                Role role1 = this.roleService.selectById(role.get(0).getParentId()).get();
-
-                RoleVo roleVo = new RoleVo();
-
-                BeanUtils.copyProperties(role1, roleVo);
-
-                handleEventGroups.add(roleVo);
-
-            }
-
-        }
-
-        return ResultInfo.create(List.class)
-                .success(handleEventGroups);
-    }
+//    @RequestMapping(value = "/queryHandleEventGroup", method = RequestMethod.GET)
+//    public ResultInfo<List> queryHandleEventGroup(Long institutionId, String rank) {
+//
+//        List<RoleVo> handleEventGroups = Lists.newArrayList();
+//
+//        if (Objects.nonNull(institutionId)) {
+//
+//            //事件创建人选了提出事件机构，查询的上级别处理部门
+//            Role role = this.roleService.selectById(this.roleService.selectById(institutionId).get().getParentId()).get();
+//
+//            RoleVo roleVo = new RoleVo();
+//
+//            BeanUtils.copyProperties(role, roleVo);
+//
+//            handleEventGroups.add(roleVo);
+//
+//        } else {
+//
+//            if ("same".equalsIgnoreCase(rank)) {
+//                //转办查询同级别
+//                List<RoleVo> role = this.roleService.queryRolesByUserName(JwtTokenUtil.getUser().getUsername());
+//
+//                handleEventGroups.addAll(role);
+//            }
+//
+//            if ("parent".equalsIgnoreCase(rank)) {
+//
+//                List<RoleVo> role = this.roleService.queryRolesByUserName(JwtTokenUtil.getUser().getUsername());
+//
+//                //移交上级查询上级别部门
+//                Role role1 = this.roleService.selectById(role.get(0).getParentId()).get();
+//
+//                RoleVo roleVo = new RoleVo();
+//
+//                BeanUtils.copyProperties(role1, roleVo);
+//
+//                handleEventGroups.add(roleVo);
+//
+//            }
+//
+//        }
+//
+//        return ResultInfo.create(List.class)
+//                .success(handleEventGroups);
+//    }
 
     @RequestMapping(value = "/queryHandleEventStaff", method = RequestMethod.GET)
     public ResultInfo<List> queryHandleEventStaff(Long handleEventGroupId) {
@@ -437,36 +437,36 @@ public class EventController {
                 .success(users);
     }
 
-    @RequestMapping(value = "/getCurrentOptionResult", method = RequestMethod.GET)
-    public ResultInfo<Map> getCurrentOptionResult() {
-
-        Map<String, Object> optionResult = Maps.newHashMap();
-
-        //选出登陆者的所有上级部门（角色）并且过滤掉顶级部门（角色）
-        List<Optional<Role>> roles = this.roleService.queryRolesByUserName(JwtTokenUtil.getUser().getUsername())
-                .stream().map(Role::getParentId).map(this.roleService::selectById).collect(Collectors.toList())
-                .stream().filter(Optional -> Optional.isPresent()).collect(Collectors.toList());
-
-        List<Long> roleIds = roles.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList())
-                .stream().map(Role::getId).collect(Collectors.toList());
-
-        List<Optional> users = Lists.newArrayList();
-
-        for (Long id : roleIds) {
-
-            users.addAll(this.userRoleRepository.findByRoleId(id)
-                    .stream().map(UserRole::getUserId)
-                    .map(this.userService::selectById).collect(Collectors.toList()));
-
-        }
-
-        optionResult.put("handleEventGroups", roles);
-
-        optionResult.put("handleEventStaffs", users);
-
-        return ResultInfo.create(Map.class)
-                .success(optionResult);
-    }
+//    @RequestMapping(value = "/getCurrentOptionResult", method = RequestMethod.GET)
+//    public ResultInfo<Map> getCurrentOptionResult() {
+//
+//        Map<String, Object> optionResult = Maps.newHashMap();
+//
+//        //选出登陆者的所有上级部门（角色）并且过滤掉顶级部门（角色）
+//        List<Optional<Role>> roles = this.roleService.queryRolesByUserName(JwtTokenUtil.getUser().getUsername())
+//                .stream().map(Role::getParentId).map(this.roleService::selectById).collect(Collectors.toList())
+//                .stream().filter(Optional -> Optional.isPresent()).collect(Collectors.toList());
+//
+//        List<Long> roleIds = roles.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList())
+//                .stream().map(Role::getId).collect(Collectors.toList());
+//
+//        List<Optional> users = Lists.newArrayList();
+//
+//        for (Long id : roleIds) {
+//
+//            users.addAll(this.userRoleRepository.findByRoleId(id)
+//                    .stream().map(UserRole::getUserId)
+//                    .map(this.userService::selectById).collect(Collectors.toList()));
+//
+//        }
+//
+//        optionResult.put("handleEventGroups", roles);
+//
+//        optionResult.put("handleEventStaffs", users);
+//
+//        return ResultInfo.create(Map.class)
+//                .success(optionResult);
+//    }
 
     @RequestMapping(value = "/getHandleEventHistoryRecord", method = RequestMethod.GET)
     public ResultInfo<List> getHandleEventHistoryRecord() {
