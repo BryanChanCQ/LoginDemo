@@ -1,8 +1,3 @@
-/*
- * 修订记录:
- * yuanxiao@cqfmbank.com 2018/12/10 17:30 创建
- *
- */
 package com.cqns.demo.utils;
 
 import com.alibaba.fastjson.JSON;
@@ -10,9 +5,6 @@ import com.alibaba.fastjson.JSON;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * @author yuanxiao@cqfmbank.com
- */
 public class ResultInfo<T> implements Serializable {
 
 	private static final long serialVersionUID = -1L;
