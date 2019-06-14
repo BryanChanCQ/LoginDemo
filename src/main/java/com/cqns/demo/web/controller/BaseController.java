@@ -312,7 +312,7 @@ public class BaseController {
     public ResultInfo<Void> updateDictionaryById(@RequestBody Dictionary dictionary){
 
         Preconditions.checkNotNull(dictionary.getId(), "Id不能为空");
-
+        System.out.println("alkjsadlkfjasldkjalsdf");
         return this.dictionaryService.updateById(dictionary) ?
                 ResultInfo.create().success().setMsg("更新成功") :
                 ResultInfo.create().fail("更新失败");
