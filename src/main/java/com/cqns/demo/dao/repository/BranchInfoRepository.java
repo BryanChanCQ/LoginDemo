@@ -1,9 +1,11 @@
 package com.cqns.demo.dao.repository;
 
 import com.cqns.demo.dao.baserepository.BaseRepository;
-import com.cqns.demo.dao.entity.UserRole;
+import com.cqns.demo.dao.entity.BranchInfo;
 
 import java.util.List;
+
+import javax.transaction.Transactional;
 
 /**
  * @Author BryanChan
@@ -11,5 +13,7 @@ import java.util.List;
  * @CreatedFor CRCBank
  * @Version 1.0
  */
-public interface BranchInfoRepository extends BaseRepository<UserRole> {
+@Transactional
+public interface BranchInfoRepository extends BaseRepository<BranchInfo> {
+	public void deleteByBranCode(String branCode);
 }

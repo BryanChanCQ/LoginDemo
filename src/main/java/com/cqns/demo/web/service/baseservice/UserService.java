@@ -3,6 +3,7 @@ package com.cqns.demo.web.service.baseservice;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.cqns.demo.dao.entity.User;
+import com.cqns.demo.dao.entity.UserRole;
 import com.cqns.demo.dao.repository.UserRepository;
 import com.cqns.demo.dao.baserepository.BaseRepository;
 import com.cqns.demo.web.service.AbstractCommonService;
@@ -24,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,6 +38,9 @@ public class UserService extends AbstractCommonService<User> {
     private UserRepository userRepository;
     @Resource
     private PasswordEncoder passwordEncoder;
+    
+    @Resource
+    private UserRoleService userRoleService;
 
     public List<UserVo> userVoList(UserVo userVo){
 
@@ -64,9 +70,10 @@ public class UserService extends AbstractCommonService<User> {
 
     }
 
-    public Page<UserVo> userVoPageInfo(UserVo userVo){
+    public List<UserVo> userVoPageInfo(UserVo userVo){
 
-        Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
+        @SuppressWarnings("rawtypes")
+		Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
             List<Predicate> predicates = Lists.newArrayList();
 
@@ -88,9 +95,30 @@ public class UserService extends AbstractCommonService<User> {
 
         Pageable pageable = new PageRequest(userVo.getPage(), userVo.getPageSize(), Sort.Direction.DESC, "lastUpdate");
 
-        Page<UserVo> page = this.userRepository.findAll(specification,pageable);
+        Page<User> page = this.userRepository.findAll(specification,pageable);
+        
+        List<UserVo> usrVo = new ArrayList<>();
+        
+        for (User usr : page)
+        {
+        	UserVo uv = new UserVo();
+        	
+        	BeanUtils.copyProperties(usr, uv);
+        	
+        	List<UserRole> ur = this.userRoleService.searchUserRole(uv.getId());
+        	
+        	List<Long> ids = new ArrayList<Long>();
+        	
+        	for(int i = 0 ;i < ur.size(); i++) ids.add(ur.get(i).getRoleId());
+        	
+        	List<RoleVo> rv = this.roleService.searchRoles(ids);
+        	
+        	uv.setRoles(rv);
+        	
+        	usrVo.add(uv);
+        }
 
-        return page;
+        return JSON.parseObject(JSON.toJSONString(usrVo), new TypeReference<List<UserVo>>(){}.getType());
     }
 
     public UserVo queryUserDetailByName(String userName) {

@@ -35,14 +35,17 @@ public class BaseController {
     @Resource
     private UserRoleService userRoleService;
 
+    @Resource
+    private BranchInfoService branchInfoService;
+    
     @RequestMapping(value = "/userList", method = RequestMethod.POST)
     public ResultInfo<List> userVoList(@RequestBody UserVo userVo){
         return ResultInfo.create(List.class).success(userService.userVoList(userVo));
     }
 
     @RequestMapping(value = "/userVoPageInfo", method = RequestMethod.POST)
-    public ResultInfo<Page> userVoPageInfo(@RequestBody UserVo userVo){
-        return ResultInfo.create(Page.class).success(userService.userVoPageInfo(userVo));
+    public ResultInfo<List> userVoPageInfo(@RequestBody UserVo userVo){
+        return ResultInfo.create(List.class).success(userService.userVoPageInfo(userVo));
     }
 
     @RequestMapping(value = {"/updateUserById"}, method = {RequestMethod.POST})
@@ -316,5 +319,56 @@ public class BaseController {
         return this.dictionaryService.updateById(dictionary) ?
                 ResultInfo.create().success().setMsg("更新成功") :
                 ResultInfo.create().fail("更新失败");
+    }
+    
+    @SuppressWarnings("rawtypes")
+	@RequestMapping(value = "/listBran" ,method = RequestMethod.POST)
+    public ResultInfo<Page> menuVoPageInfo(@RequestBody BranchInfoVo branchInfoVo){
+        return ResultInfo.create(Page.class).success(this.branchInfoService.getBranchs(branchInfoVo));
+    }
+    
+    @RequestMapping(value = "/addBran" ,method = RequestMethod.POST)
+    public ResultInfo<Void> addBranch(@RequestBody BranchInfo branchInfo)
+    {
+    	try{
+    		return this.branchInfoService.insert(branchInfo) ?
+    				ResultInfo.create().success().setMsg("添加成功") :
+    					ResultInfo.create().fail("添加失败");
+    	}catch (Exception e){
+    		logger.error("Error", e);
+    		throw new RuntimeException(e.getCause());
+    	}
+    }
+    
+    @RequestMapping(value = "/updBran" ,method = RequestMethod.POST)
+    public ResultInfo<Void> updBranch(@RequestBody BranchInfo branchInfo)
+    {
+    	try{
+    		this.branchInfoService.updateBranch(branchInfo);
+    		return ResultInfo.create().success().setMsg("更新成功");
+    	}catch (Exception e){
+    		logger.error("Error", e);
+    		ResultInfo.create().fail("更新失败");
+    		throw new RuntimeException(e.getCause());
+    	}
+    }
+    
+    @RequestMapping(value = "/delBran" ,method = RequestMethod.POST)
+    public ResultInfo<Void> delBranch(String branCode)
+    {
+    	try{
+    		return this.branchInfoService.deleteByBranCode(branCode) ?
+    				ResultInfo.create().success().setMsg("删除成功") :
+    					ResultInfo.create().fail("删除失败");
+    	}catch (Exception e){
+    		logger.error("Error", e);
+    		throw new RuntimeException(e.getCause());
+    	}
+    }
+    
+    @RequestMapping(value = "/getAllBranchs" ,method = RequestMethod.GET)
+    public ResultInfo<List> getAllBranchs()
+    {
+    	return ResultInfo.create(List.class).success(this.branchInfoService.getAllBranch());
     }
 }
