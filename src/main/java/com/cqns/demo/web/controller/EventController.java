@@ -475,6 +475,8 @@ public class EventController {
         List<Optional<EventVo>> eventVos = JSON.parseObject(JSON.toJSONString(events), new TypeReference<List<Optional<EventVo>>>() {
         }.getType());
 
+        eventVos.forEach(Optional -> Optional.get().setShowInstitution(this.branchInfoRepository.findByBranCode(Optional.get().getInstitution()).getBranName()));
+
         eventVos.forEach(Optional -> Optional.get().setShowHandleEventGroup(this.branchInfoRepository.findByBranCode(Optional.get().getHandleEventGroup()).getBranName()));
 
         eventVos.forEach(Optional -> Optional.get().setShowHandleEventStaff(this.userService.queryUserByName(Optional.get().getHandleEventStaff()).getDisplayName()));
@@ -545,7 +547,8 @@ public class EventController {
                 handleEventDetailsVo.setShowHandleEventStaff(this.userService.selectById(Long.valueOf(handleEventDetailsVo.getHandleEventStaff())).get().getDisplayName());
 
         }
-//        handleEventDetailsVo.setShowSystem(this.dictionaryRepository.findDictionaryByKey(String.valueOf(handleEventDetailsVo.getSystem())).getName());
+
+        handleEventDetailsVo.setShowSystem(this.dictionaryRepository.findDictionaryByKey(String.valueOf(handleEventDetailsVo.getSystem())).getName());
 
         handleEventDetailsVo.setShowTestCover(this.dictionaryRepository.findDictionaryByKey(handleEventDetailsVo.getTestCover()).getName());
 

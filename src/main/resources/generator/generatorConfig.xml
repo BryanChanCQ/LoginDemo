@@ -23,7 +23,7 @@
         <javaClientGenerator targetPackage="com.cqns.demo.dao.mapper" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table tableName="t_event" >
+        <table tableName="t_handle_event_details" >
             <property name="useActualColumnNames" value="false" />
             <!--mysql 配置-->
             <generatedKey column="id" sqlStatement="Mysql"/>
