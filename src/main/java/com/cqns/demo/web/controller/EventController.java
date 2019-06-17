@@ -13,10 +13,7 @@ import com.cqns.demo.web.service.baseservice.UserRoleService;
 import com.cqns.demo.web.service.baseservice.UserService;
 import com.cqns.demo.web.service.eventservice.EventService;
 import com.cqns.demo.web.service.eventservice.HandleEventDetailsService;
-import com.cqns.demo.web.vo.EventVo;
-import com.cqns.demo.web.vo.HandleEventDetailsVo;
-import com.cqns.demo.web.vo.RoleVo;
-import com.cqns.demo.web.vo.UserRoleVo;
+import com.cqns.demo.web.vo.*;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -31,6 +28,7 @@ import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,13 +65,9 @@ public class EventController {
     @Resource
     private EventAttachmentRepository eventAttachmentRepository;
     @Resource
-    private UserRoleService userRoleService;
-    @Resource
     private RoleService roleService;
     @Resource
     private DictionaryRepository dictionaryRepository;
-    @Resource
-    private UserRoleRepository userRoleRepository;
     @Resource
     private UserService userService;
     @Resource
@@ -81,12 +75,20 @@ public class EventController {
     @Resource
     private HandleEventDetailsRepository handleEventDetailsRepository;
     @Resource
-    private BranchInfoService branchInfoService;
-    private final String string = "/uploadAttachmentFile";
+    private BranchInfoRepository branchInfoRepository;
+    @Resource
+    private UserRepository userRepository;
 
     @RequestMapping(value = "/queryInstitution", method = RequestMethod.GET)
-    public ResultInfo<List> queryInstitution() {
-        return ResultInfo.create(List.class).success(this.branchInfoService.getAllBranch());
+    public ResultInfo<BranchInfoVo> queryInstitution() {
+
+        String branchCode = this.userService.queryUserByName(JwtTokenUtil.getUser().getUsername()).getOrgCode();
+
+        BranchInfoVo branchInfoVo = new BranchInfoVo();
+
+        BeanUtils.copyProperties(this.branchInfoRepository.findByBranCode(branchCode), branchInfoVo);
+
+        return ResultInfo.create(BranchInfoVo.class).success(branchInfoVo);
     }
 
     @RequestMapping(value = "/eventVoPageInfo", method = RequestMethod.POST)
@@ -187,7 +189,7 @@ public class EventController {
         List<Optional<EventVo>> eventVos = JSON.parseObject(JSON.toJSONString(events), new TypeReference<List<Optional<EventVo>>>() {
         }.getType());
 
-        eventVos.forEach(Optional -> Optional.get().setShowHandleEventGroup(this.roleService.selectById(Optional.get().getHandleEventGroup()).get().getName()));
+        eventVos.forEach(Optional -> Optional.get().setShowHandleEventGroup(this.branchInfoRepository.findByBranCode(Optional.get().getHandleEventGroup()).getBranName()));
 
         eventVos.forEach(Optional -> Optional.get().setShowHandleEventStaff(this.userService.queryUserByName(Optional.get().getHandleEventStaff()).getDisplayName()));
 
@@ -195,7 +197,7 @@ public class EventController {
 
         eventVos.forEach(Optional -> Optional.get().setShowEventType(this.dictionaryRepository.findDictionaryByKey(Optional.get().getEventType()).getName()));
 
-        eventVos.forEach(Optional -> Optional.get().setShowInstitution(this.roleService.selectById(Optional.get().getInstitution()).get().getName()));
+        eventVos.forEach(Optional -> Optional.get().setShowInstitution(this.branchInfoRepository.findByBranCode(Optional.get().getInstitution()).getBranName()));
 
         return eventVos;
     }
@@ -377,92 +379,71 @@ public class EventController {
                 .success(this.dictionaryRepository.findDictionaryByParentId(this.dictionaryRepository.findDictionaryByKey(key).getId()));
     }
 
-//    @RequestMapping(value = "/queryHandleEventGroup", method = RequestMethod.GET)
-//    public ResultInfo<List> queryHandleEventGroup(Long institutionId, String rank) {
-//
-//        List<RoleVo> handleEventGroups = Lists.newArrayList();
-//
-//        if (Objects.nonNull(institutionId)) {
-//
-//            //事件创建人选了提出事件机构，查询的上级别处理部门
-//            Role role = this.roleService.selectById(this.roleService.selectById(institutionId).get().getParentId()).get();
-//
-//            RoleVo roleVo = new RoleVo();
-//
-//            BeanUtils.copyProperties(role, roleVo);
-//
-//            handleEventGroups.add(roleVo);
-//
-//        } else {
-//
-//            if ("same".equalsIgnoreCase(rank)) {
-//                //转办查询同级别
-//                List<RoleVo> role = this.roleService.queryRolesByUserName(JwtTokenUtil.getUser().getUsername());
-//
-//                handleEventGroups.addAll(role);
-//            }
-//
-//            if ("parent".equalsIgnoreCase(rank)) {
-//
-//                List<RoleVo> role = this.roleService.queryRolesByUserName(JwtTokenUtil.getUser().getUsername());
-//
-//                //移交上级查询上级别部门
-//                Role role1 = this.roleService.selectById(role.get(0).getParentId()).get();
-//
-//                RoleVo roleVo = new RoleVo();
-//
-//                BeanUtils.copyProperties(role1, roleVo);
-//
-//                handleEventGroups.add(roleVo);
-//
-//            }
-//
-//        }
-//
-//        return ResultInfo.create(List.class)
-//                .success(handleEventGroups);
-//    }
+    @RequestMapping(value = "/queryHandleEventGroup", method = RequestMethod.GET)
+    public ResultInfo<BranchInfoVo> queryHandleEventGroup(String branCode, String rank) {
 
-    @RequestMapping(value = "/queryHandleEventStaff", method = RequestMethod.GET)
-    public ResultInfo<List> queryHandleEventStaff(Long handleEventGroupId) {
+        BranchInfoVo branchInfoVo = new BranchInfoVo();
 
-        List<Optional> users = this.userRoleRepository.findByRoleId(this.roleService.selectById(handleEventGroupId).get().getId())
-                .stream().map(UserRole::getUserId).collect(Collectors.toList())
-                .stream().map(this.userService::selectById).collect(Collectors.toList());
-        return ResultInfo.create(List.class)
-                .success(users);
+        if (!Strings.isNullOrEmpty(branCode)) {
+
+            //事件创建人选了提出事件机构，查询的上级别处理部门
+            String supperBran = this.branchInfoRepository.findByBranCode(branCode).getSupperBran();
+
+            BeanUtils.copyProperties(this.branchInfoRepository.findByBranCode(supperBran), branchInfoVo);
+
+        } else {
+
+            if ("same".equalsIgnoreCase(rank)) {
+                //转办查询同级别
+                String branchCode = this.userService.queryUserByName(JwtTokenUtil.getUser().getUsername()).getOrgCode();
+
+                BeanUtils.copyProperties(this.branchInfoRepository.findByBranCode(branchCode), branchInfoVo);
+
+            }
+
+            if ("parent".equalsIgnoreCase(rank)) {
+
+                String branchCode = this.userService.queryUserByName(JwtTokenUtil.getUser().getUsername()).getOrgCode();
+
+                String supperBran = this.branchInfoRepository.findByBranCode(branchCode).getSupperBran();
+                //移交上级查询上级别部门
+                BeanUtils.copyProperties(this.branchInfoRepository.findByBranCode(supperBran), branchInfoVo);
+
+            }
+
+        }
+
+        return ResultInfo.create(BranchInfoVo.class)
+                .success(branchInfoVo);
     }
 
-//    @RequestMapping(value = "/getCurrentOptionResult", method = RequestMethod.GET)
-//    public ResultInfo<Map> getCurrentOptionResult() {
-//
-//        Map<String, Object> optionResult = Maps.newHashMap();
-//
-//        //选出登陆者的所有上级部门（角色）并且过滤掉顶级部门（角色）
-//        List<Optional<Role>> roles = this.roleService.queryRolesByUserName(JwtTokenUtil.getUser().getUsername())
-//                .stream().map(Role::getParentId).map(this.roleService::selectById).collect(Collectors.toList())
-//                .stream().filter(Optional -> Optional.isPresent()).collect(Collectors.toList());
-//
-//        List<Long> roleIds = roles.stream().filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList())
-//                .stream().map(Role::getId).collect(Collectors.toList());
-//
-//        List<Optional> users = Lists.newArrayList();
-//
-//        for (Long id : roleIds) {
-//
-//            users.addAll(this.userRoleRepository.findByRoleId(id)
-//                    .stream().map(UserRole::getUserId)
-//                    .map(this.userService::selectById).collect(Collectors.toList()));
-//
-//        }
-//
-//        optionResult.put("handleEventGroups", roles);
-//
-//        optionResult.put("handleEventStaffs", users);
-//
-//        return ResultInfo.create(Map.class)
-//                .success(optionResult);
-//    }
+    @RequestMapping(value = "/queryHandleEventStaff", method = RequestMethod.GET)
+    public ResultInfo<List> queryHandleEventStaff(String branCode) {
+
+        return ResultInfo.create(List.class)
+                .success(this.userRepository.findByOrgCode(branCode));
+    }
+
+    @RequestMapping(value = "/getCurrentOptionResult", method = RequestMethod.GET)
+    public ResultInfo<Map> getCurrentOptionResult() {
+
+        Map<String, Object> optionResult = Maps.newHashMap();
+
+        //选出登陆者的上级部门
+        String branchCode = this.userRepository.findByUserName(JwtTokenUtil.getUser().getUsername()).getOrgCode();
+
+        BranchInfo branchInfo = this.branchInfoRepository.findByBranCode(this.branchInfoRepository.findByBranCode(branchCode).getSupperBran());
+
+        //选出上级部门下面的所有人员
+        List<User> users = this.userRepository.findByOrgCode(branchInfo.getBranCode());
+
+        optionResult.put("handleEventGroups", branchInfo);
+
+        optionResult.put("handleEventStaffs", users);
+
+        return ResultInfo.create(Map.class)
+                .success(optionResult);
+    }
 
     @RequestMapping(value = "/getHandleEventHistoryRecord", method = RequestMethod.GET)
     public ResultInfo<List> getHandleEventHistoryRecord() {
@@ -494,7 +475,7 @@ public class EventController {
         List<Optional<EventVo>> eventVos = JSON.parseObject(JSON.toJSONString(events), new TypeReference<List<Optional<EventVo>>>() {
         }.getType());
 
-        eventVos.forEach(Optional -> Optional.get().setShowHandleEventGroup(this.roleService.selectById(Optional.get().getHandleEventGroup()).get().getName()));
+        eventVos.forEach(Optional -> Optional.get().setShowHandleEventGroup(this.branchInfoRepository.findByBranCode(Optional.get().getHandleEventGroup()).getBranName()));
 
         eventVos.forEach(Optional -> Optional.get().setShowHandleEventStaff(this.userService.queryUserByName(Optional.get().getHandleEventStaff()).getDisplayName()));
 

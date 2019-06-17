@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface UserRepository extends BaseRepository<User> {
     User findByUserName(String name);
+    List<User> findByOrgCode(String branchCode);
 }

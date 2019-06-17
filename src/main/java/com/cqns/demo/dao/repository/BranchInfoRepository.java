@@ -2,6 +2,7 @@ package com.cqns.demo.dao.repository;
 
 import com.cqns.demo.dao.baserepository.BaseRepository;
 import com.cqns.demo.dao.entity.BranchInfo;
+import com.cqns.demo.web.vo.BranchInfoVo;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ import javax.transaction.Transactional;
 @Transactional
 public interface BranchInfoRepository extends BaseRepository<BranchInfo> {
 	void deleteByBranCode(String branCode);
+	BranchInfo findByBranCode(String branCode);
 }

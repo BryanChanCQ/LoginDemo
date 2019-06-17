@@ -3,6 +3,7 @@ package com.cqns.demo.web.service.eventservice;
 import com.cqns.demo.dao.baserepository.BaseRepository;
 import com.cqns.demo.dao.entity.Event;
 import com.cqns.demo.dao.entity.EventAttachment;
+import com.cqns.demo.dao.repository.BranchInfoRepository;
 import com.cqns.demo.dao.repository.DictionaryRepository;
 import com.cqns.demo.dao.repository.EventAttachmentRepository;
 import com.cqns.demo.dao.repository.EventRepository;
@@ -45,6 +46,8 @@ public class EventService extends AbstractCommonService<Event>{
     private DictionaryRepository dictionaryRepository;
     @Resource
     private EventAttachmentRepository eventAttachmentRepository;
+    @Resource
+    private BranchInfoRepository branchInfoRepository;
 
     public Map<String, Object> eventVoPageInfo(EventVo eventVo){
 
@@ -70,7 +73,7 @@ public class EventService extends AbstractCommonService<Event>{
 
         };
 
-        Pageable pageable = new PageRequest(eventVo.getPage(), eventVo.getPageSize(), Sort.Direction.ASC, "rawUpdateTime");
+        Pageable pageable = PageRequest.of(eventVo.getPage(), eventVo.getPageSize(), Sort.Direction.ASC, "rawUpdateTime");
 
         Page<Event> page = this.eventRepository.findAll(specification,pageable);
 
@@ -82,9 +85,9 @@ public class EventService extends AbstractCommonService<Event>{
 
             BeanUtils.copyProperties(event, eventVo1);
 
-            eventVo1.setShowInstitution(this.roleService.selectById(event.getInstitution()).get().getName());
+            eventVo1.setShowInstitution(this.branchInfoRepository.findByBranCode(String.valueOf(event.getInstitution())).getBranName());
 
-            eventVo1.setShowHandleEventGroup(this.roleService.selectById(event.getHandleEventGroup()).get().getName());
+            eventVo1.setShowHandleEventGroup(this.branchInfoRepository.findByBranCode(String.valueOf(event.getHandleEventGroup())).getBranName());
 
             eventVo1.setShowHandleEventStaff(this.userService.queryUserByName(event.getHandleEventStaff()).getDisplayName());
 
