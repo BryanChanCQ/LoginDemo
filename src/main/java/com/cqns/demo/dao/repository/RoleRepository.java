@@ -7,5 +7,5 @@ import com.cqns.demo.dao.entity.Role;
 
 
 public interface RoleRepository extends BaseRepository<Role> {
-	public List<Role> findByIdIn(List<Long> ids);
+	List<Role> findByIdIn(List<Long> ids);
 }

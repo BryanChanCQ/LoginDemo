@@ -368,8 +368,9 @@ public class BaseController {
     }
     
     @RequestMapping(value = "/getAllBranchs" ,method = RequestMethod.GET)
-    public ResultInfo<List> getAllBranchs()
-    {
-    	return ResultInfo.create(List.class).success(this.branchInfoService.getAllBranch());
+    public ResultInfo<List> getAllBranchs() {
+
+        return ResultInfo.create(List.class).success(this.branchInfoService.getAllBranch());
+
     }
 }

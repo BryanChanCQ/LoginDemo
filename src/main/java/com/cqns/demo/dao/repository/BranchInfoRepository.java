@@ -15,5 +15,5 @@ import javax.transaction.Transactional;
  */
 @Transactional
 public interface BranchInfoRepository extends BaseRepository<BranchInfo> {
-	public void deleteByBranCode(String branCode);
+	void deleteByBranCode(String branCode);
 }

@@ -114,9 +114,10 @@ public class RoleService extends AbstractCommonService<Role> {
 
     }
 
-    public List<RoleVo> searchRoles(List<Long> ids)
-    {
-    	List<Role> roles = this.roleRepository.findByIdIn(ids);
-    	return JSON.parseObject(JSON.toJSONString(roles), new TypeReference<List<RoleVo>>(){}.getType());
+    public List<RoleVo> searchRoles(List<Long> ids) {
+
+        List<Role> roles = this.roleRepository.findByIdIn(ids);
+
+        return JSON.parseObject(JSON.toJSONString(roles), new TypeReference<List<RoleVo>>(){}.getType());
     }
 }

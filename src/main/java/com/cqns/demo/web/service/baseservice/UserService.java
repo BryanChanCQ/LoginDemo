@@ -42,7 +42,6 @@ public class UserService extends AbstractCommonService<User> {
     private UserRepository userRepository;
     @Resource
     private PasswordEncoder passwordEncoder;
-    
     @Resource
     private UserRoleService userRoleService;
 
