@@ -371,6 +371,7 @@ public class BaseController {
     @RequestMapping(value = "/getAllBranchs" ,method = RequestMethod.GET)
     public ResultInfo<List> getAllBranchs() {
 
+    	logger.debug("this is a test");
         return ResultInfo.create(List.class).success(this.branchInfoService.getAllBranch());
 
     }
