@@ -45,7 +45,8 @@ public class BaseController {
     }
 
     @RequestMapping(value = "/userVoPageInfo", method = RequestMethod.POST)
-    public ResultInfo<Map> userVoPageInfo(@RequestBody UserVo userVo){
+    public ResultInfo<Map> userVoPageInfo(@RequestBody UserVo userVo) {
+    	System.out.print("   ");
         return ResultInfo.create(Map.class).success(userService.userVoPageInfo(userVo));
     }
 
