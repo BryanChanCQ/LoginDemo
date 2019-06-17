@@ -12,6 +12,8 @@ import com.cqns.demo.web.vo.UserVo;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +30,8 @@ import javax.persistence.criteria.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService extends AbstractCommonService<User> {
@@ -70,8 +74,10 @@ public class UserService extends AbstractCommonService<User> {
 
     }
 
-    public List<UserVo> userVoPageInfo(UserVo userVo){
+    public Map<String ,Object> userVoPageInfo(UserVo userVo){
 
+    	Map<String ,Object> resultMap = Maps.newHashMap();
+    	
         @SuppressWarnings("rawtypes")
 		Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
 
@@ -96,7 +102,7 @@ public class UserService extends AbstractCommonService<User> {
         Pageable pageable = new PageRequest(userVo.getPage(), userVo.getPageSize(), Sort.Direction.DESC, "lastUpdate");
 
         Page<User> page = this.userRepository.findAll(specification,pageable);
-        
+
         List<UserVo> usrVo = new ArrayList<>();
         
         for (User usr : page)
@@ -105,20 +111,18 @@ public class UserService extends AbstractCommonService<User> {
         	
         	BeanUtils.copyProperties(usr, uv);
         	
-        	List<UserRole> ur = this.userRoleService.searchUserRole(uv.getId());
+        	List<UserRole> ur = this.userRoleService.searchUserRole(usr.getId());
         	
-        	List<Long> ids = new ArrayList<Long>();
-        	
-        	for(int i = 0 ;i < ur.size(); i++) ids.add(ur.get(i).getRoleId());
-        	
-        	List<RoleVo> rv = this.roleService.searchRoles(ids);
+        	List<RoleVo> rv = this.roleService.searchRoles(ur.stream().map(userRole -> userRole.getRoleId()).collect(Collectors.toList()));
         	
         	uv.setRoles(rv);
         	
         	usrVo.add(uv);
         }
 
-        return JSON.parseObject(JSON.toJSONString(usrVo), new TypeReference<List<UserVo>>(){}.getType());
+        resultMap.put("content" ,usrVo);
+        resultMap.put("totalElements" ,page.getTotalElements());
+        return resultMap;
     }
 
     public UserVo queryUserDetailByName(String userName) {

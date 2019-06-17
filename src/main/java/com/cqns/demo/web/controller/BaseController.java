@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/BaseController")
@@ -44,8 +45,8 @@ public class BaseController {
     }
 
     @RequestMapping(value = "/userVoPageInfo", method = RequestMethod.POST)
-    public ResultInfo<List> userVoPageInfo(@RequestBody UserVo userVo){
-        return ResultInfo.create(List.class).success(userService.userVoPageInfo(userVo));
+    public ResultInfo<Map> userVoPageInfo(@RequestBody UserVo userVo){
+        return ResultInfo.create(Map.class).success(userService.userVoPageInfo(userVo));
     }
 
     @RequestMapping(value = {"/updateUserById"}, method = {RequestMethod.POST})
