@@ -10,6 +10,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +32,7 @@ import com.google.common.base.Strings;
 
 @Service
 public class BranchInfoService extends AbstractCommonService<BranchInfo> {
-
+	private static Logger logger = LoggerFactory.getLogger(BranchInfoService.class);
 	@Resource
 	private BranchInfoRepository branchInfoRepository;
 	
@@ -42,7 +45,6 @@ public class BranchInfoService extends AbstractCommonService<BranchInfo> {
 		return branchInfoRepository;
 	}
 
-	@SuppressWarnings("deprecation")
 	public Page<BranchInfo> getBranchs(BranchInfoVo branchInfo)
 	{
 		Specification<BranchInfo> specification = new Specification<BranchInfo>() {
@@ -56,39 +58,58 @@ public class BranchInfoService extends AbstractCommonService<BranchInfo> {
              */
             @Override
             public Predicate toPredicate(Root<BranchInfo> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                List<Predicate> predicates = new ArrayList<>(); //所有的断言
-                if(!Strings.isNullOrEmpty(branchInfo.getBranName())){ //添加断言
+
+            	List<Predicate> predicates = Lists.newArrayList(); //所有的断言
+
+				if(!Strings.isNullOrEmpty(branchInfo.getBranName())){ //添加断言
+
                     Predicate likeNickName = cb.like(root.get("branName").as(String.class) ,branchInfo.getBranName() + "%");
+
                     predicates.add(likeNickName);
                 }
-                return cb.and(predicates.toArray(new Predicate[0]));
+
+				if (!Strings.isNullOrEmpty(branchInfo.getBranCode())){
+
+					predicates.add(cb.equal(root.get("branCode"), branchInfo.getBranCode()));
+
+				}
+
+				return cb.and(predicates.toArray(new Predicate[predicates.size()]));
+
             }
-        };
+
+		};
         //分页信息
-        Pageable pageable = new PageRequest(branchInfo.getPage() ,branchInfo.getPageSize()); 
+        Pageable pageable = PageRequest.of(branchInfo.getPage() ,branchInfo.getPageSize());
         //查询
         return this.branchInfoRepository.findAll(specification ,pageable);
 	}
 	
-	public BranchInfo updateBranch(BranchInfo branchInfo)
-	{
+	public BranchInfo updateBranch(BranchInfo branchInfo) {
+
 		return this.branchInfoRepository.saveAndFlush(branchInfo);
+
 	}
 	
-	public boolean deleteByBranCode(String branCode)
-	{
+	public boolean deleteByBranCode(String branCode) {
+
 		try {
+
 			this.branchInfoRepository.deleteByBranCode(branCode);
+
 			return true;
-		}catch(Exception e)
-		{
+		}catch(Exception e) {
+
+			logger.error("Error", e);
+
 			return false;
 		}
 	}
 	
-	public List<BranchInfoVo> getAllBranch()
-	{
+	public List<BranchInfoVo> getAllBranch() {
+
 		List<BranchInfo> branchList = this.branchInfoRepository.findAll();
+
 		return JSON.parseObject(JSON.toJSONString(branchList), new TypeReference<List<BranchInfoVo>>(){}.getType());
 	}
 }

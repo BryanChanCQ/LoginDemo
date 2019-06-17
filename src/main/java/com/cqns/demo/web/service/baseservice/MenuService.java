@@ -61,7 +61,7 @@ public class MenuService extends AbstractCommonService<Menu> {
 
         };
 
-        Pageable pageable = new PageRequest(menuVo.getPage(), menuVo.getPageSize(), Sort.Direction.ASC, "parentId");
+        Pageable pageable = PageRequest.of(menuVo.getPage(), menuVo.getPageSize(), Sort.Direction.ASC, "parentId");
 
         Page<MenuVo> page = this.menuRepository.findAll(specification,pageable);
 

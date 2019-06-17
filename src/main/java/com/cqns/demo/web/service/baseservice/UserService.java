@@ -98,7 +98,7 @@ public class UserService extends AbstractCommonService<User> {
 
         };
 
-        Pageable pageable = new PageRequest(userVo.getPage(), userVo.getPageSize(), Sort.Direction.DESC, "lastUpdate");
+        Pageable pageable = PageRequest.of(userVo.getPage(), userVo.getPageSize(), Sort.Direction.DESC, "lastUpdate");
 
         Page<User> page = this.userRepository.findAll(specification,pageable);
 

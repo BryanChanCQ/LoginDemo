@@ -7,6 +7,7 @@ import com.cqns.demo.dao.entity.*;
 import com.cqns.demo.dao.repository.*;
 import com.cqns.demo.utils.JwtTokenUtil;
 import com.cqns.demo.utils.ResultInfo;
+import com.cqns.demo.web.service.baseservice.BranchInfoService;
 import com.cqns.demo.web.service.baseservice.RoleService;
 import com.cqns.demo.web.service.baseservice.UserRoleService;
 import com.cqns.demo.web.service.baseservice.UserService;
@@ -79,18 +80,13 @@ public class EventController {
     private HandleEventDetailsService handleEventDetailsService;
     @Resource
     private HandleEventDetailsRepository handleEventDetailsRepository;
+    @Resource
+    private BranchInfoService branchInfoService;
     private final String string = "/uploadAttachmentFile";
 
     @RequestMapping(value = "/queryInstitution", method = RequestMethod.GET)
     public ResultInfo<List> queryInstitution() {
-
-        UserRoleVo userRoleVo = new UserRoleVo();
-
-        userRoleVo.setUserName(JwtTokenUtil.getUser().getUsername());
-
-        return ResultInfo.create(List.class).success(this.userRoleService.userRoleVoList(userRoleVo)
-                .stream().map(UserRole::getRoleId).collect(Collectors.toList())
-                .stream().map(this.roleService::selectById).collect(Collectors.toList()));
+        return ResultInfo.create(List.class).success(this.branchInfoService.getAllBranch());
     }
 
     @RequestMapping(value = "/eventVoPageInfo", method = RequestMethod.POST)
