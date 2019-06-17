@@ -53,7 +53,7 @@ public class DictionaryService extends AbstractCommonService<Dictionary> {
 
         };
 
-        Pageable pageable = new PageRequest(dictionaryVo.getPage(), dictionaryVo.getPageSize(), Sort.Direction.DESC, "rawUpdateTime");
+        Pageable pageable = PageRequest.of(dictionaryVo.getPage(), dictionaryVo.getPageSize(), Sort.Direction.DESC, "rawUpdateTime");
 
         Page<DictionaryVo> page = this.dictionaryRepository.findAll(specification,pageable);
 

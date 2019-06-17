@@ -89,7 +89,7 @@ public class UserRoleService extends AbstractCommonService<UserRole> {
 
         };
 
-        Pageable pageable = new PageRequest(userRoleVo.getPage(), userRoleVo.getPageSize(), Sort.Direction.DESC, "rawUpdateTime");
+        Pageable pageable = PageRequest.of(userRoleVo.getPage(), userRoleVo.getPageSize(), Sort.Direction.DESC, "rawUpdateTime");
 
         Page<UserRoleVo> page = this.userRoleRepository.findAll(specification,pageable);
 

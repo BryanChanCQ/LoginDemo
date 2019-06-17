@@ -54,7 +54,6 @@ public class EventService extends AbstractCommonService<Event>{
 
             List<Predicate> predicates = Lists.newArrayList();
 
-
             if (!Strings.isNullOrEmpty(JwtTokenUtil.getUser().getUsername())){
 
                 predicates.add(criteriaBuilder.like(root.get("createdBy"),"%" + JwtTokenUtil.getUser().getUsername() + "%"));
