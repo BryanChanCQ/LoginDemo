@@ -14,7 +14,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 public class JwtTokenUtil implements Serializable {
     private static Logger logger = LoggerFactory.getLogger(JwtTokenUtil.class);
     /**

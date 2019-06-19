@@ -32,7 +32,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 @Service
 public class UserService extends AbstractCommonService<User> {
     private static Logger logger = LoggerFactory.getLogger(UserService.class);

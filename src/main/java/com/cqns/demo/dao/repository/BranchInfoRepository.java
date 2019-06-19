@@ -14,8 +14,18 @@ import javax.transaction.Transactional;
  * @CreatedFor CRCBank
  * @Version 1.0
  */
-@Transactional
+@Transactional(rollbackOn = Exception.class)
 public interface BranchInfoRepository extends BaseRepository<BranchInfo> {
+	/**
+	 * 通过机构代码删除机构信息
+	 * @param branCode
+	 */
 	void deleteByBranCode(String branCode);
+
+	/**
+	 * 通过机构代码查询机构信息
+	 * @param branCode
+	 * @return
+	 */
 	BranchInfo findByBranCode(String branCode);
 }

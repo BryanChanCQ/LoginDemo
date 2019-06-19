@@ -24,7 +24,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import javax.servlet.MultipartConfigElement;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -37,8 +42,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
 
-    // 这里记住一定要重新父类的对象，不然在注入 AuthenticationManager时会找不到，
-    // 默认spring security 没有给我们注入到容器中
+
+
+    /**
+     * 这里记住一定要重新父类的对象，不然在注入 AuthenticationManager时会找不到，
+     * 默认spring security 没有给我们注入到容器中
+     */
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -59,12 +68,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().headers().cacheControl();
         // 注入我们刚才写好的 jwt过滤器
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-//        // 这块是配置跨域请求的
+       // 这块是配置跨域请求的
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http.authorizeRequests();
         //让Spring security放行所有preflight request
         registry.requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
     }
-//     这块是配置跨域请求的
+    /**
+     * 这块是配置跨域请求的
+     */
     @Bean
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
@@ -81,7 +92,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationTokenFilter();
     }
 
-    // 密码加密
+    /**
+     * 密码加密
+     */
     @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();

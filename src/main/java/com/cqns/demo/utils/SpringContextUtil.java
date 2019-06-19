@@ -8,7 +8,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 @Component
 public class SpringContextUtil implements ApplicationContextAware {
 

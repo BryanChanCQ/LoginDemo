@@ -548,16 +548,19 @@ public class EventService extends AbstractCommonService<Event>{
 
         handleEventDetailsVo.setShowOptimizeCategories(this.dictionaryRepository.findDictionaryByKey(handleEventDetailsVo.getOptimizeCategories()).getName());
 
-        if (Objects.nonNull(this.branchInfoRepository.findByBranCode(String.valueOf(handleEventDetailsVo.getHandleEventGroup()))))
+        if (Objects.nonNull(this.branchInfoRepository.findByBranCode(String.valueOf(handleEventDetailsVo.getHandleEventGroup())))) {
 
             handleEventDetailsVo.setShowHandleEventGroup(this.branchInfoRepository.findByBranCode(String.valueOf(handleEventDetailsVo.getHandleEventGroup())).getBranName());
 
+        }
+
         if (!Strings.isNullOrEmpty(handleEventDetailsVo.getHandleEventStaff())) {
 
-            if (Objects.nonNull(this.userService.queryUserByName(handleEventDetailsVo.getHandleEventStaff())))
+            if (Objects.nonNull(this.userService.queryUserByName(handleEventDetailsVo.getHandleEventStaff()))) {
 
                 handleEventDetailsVo.setShowHandleEventStaff(this.userService.queryUserByName(handleEventDetailsVo.getHandleEventStaff()).getDisplayName());
 
+            }
         }
 
         handleEventDetailsVo.setShowSystem(this.dictionaryRepository.findDictionaryByKey(String.valueOf(handleEventDetailsVo.getSystem())).getName());

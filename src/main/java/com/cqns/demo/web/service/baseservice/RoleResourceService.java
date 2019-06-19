@@ -22,7 +22,12 @@ import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 import java.util.List;
 import java.util.Objects;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 @Service
 public class RoleResourceService  extends AbstractCommonService<RoleResource> {
     private static Logger logger = LoggerFactory.getLogger(RoleResourceService.class);

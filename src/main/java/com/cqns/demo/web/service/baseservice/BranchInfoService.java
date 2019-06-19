@@ -1,8 +1,6 @@
 package com.cqns.demo.web.service.baseservice;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -29,7 +27,12 @@ import com.cqns.demo.web.service.AbstractCommonService;
 import com.cqns.demo.web.vo.BranchInfoVo;
 import com.cqns.demo.web.vo.RoleVo;
 import com.google.common.base.Strings;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 @Service
 public class BranchInfoService extends AbstractCommonService<BranchInfo> {
 	private static Logger logger = LoggerFactory.getLogger(BranchInfoService.class);

@@ -202,32 +202,4 @@ public class Event {
         this.updateBy = updateBy;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Event event = (Event) o;
-        return id == event.id &&
-                Objects.equals(eventTitle, event.eventTitle) &&
-                Objects.equals(eventIdentifier, event.eventIdentifier) &&
-                Objects.equals(eventType, event.eventType) &&
-                Objects.equals(eventContactor, event.eventContactor) &&
-                Objects.equals(contact, event.contact) &&
-                Objects.equals(institution, event.institution) &&
-                Objects.equals(eventCreateDate, event.eventCreateDate) &&
-                Objects.equals(description, event.description) &&
-                Objects.equals(priorityLevel, event.priorityLevel) &&
-                Objects.equals(handleEventGroup, event.handleEventGroup) &&
-                Objects.equals(handleEventStaff, event.handleEventStaff) &&
-                Objects.equals(status, event.status) &&
-                Objects.equals(rawUpdateTime, event.rawUpdateTime) &&
-                Objects.equals(rawAddTime, event.rawAddTime) &&
-                Objects.equals(createdBy, event.createdBy) &&
-                Objects.equals(updateBy, event.updateBy);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, eventTitle, eventIdentifier, eventType, eventContactor, contact, institution, eventCreateDate, description, priorityLevel, handleEventGroup, handleEventStaff, status, rawUpdateTime, rawAddTime, createdBy, updateBy);
-    }
 }

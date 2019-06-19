@@ -92,22 +92,4 @@ public class EventAttachment {
         this.createdBy = createdBy;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        EventAttachment that = (EventAttachment) o;
-        return id == that.id &&
-                Objects.equals(eventIdentifier, that.eventIdentifier) &&
-                Objects.equals(attachmentName, that.attachmentName) &&
-                Objects.equals(attachmentPath, that.attachmentPath) &&
-                Objects.equals(rawUpdateTime, that.rawUpdateTime) &&
-                Objects.equals(rawAddTime, that.rawAddTime) &&
-                Objects.equals(createdBy, that.createdBy);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, eventIdentifier, attachmentName, attachmentPath, rawUpdateTime, rawAddTime, createdBy);
-    }
 }

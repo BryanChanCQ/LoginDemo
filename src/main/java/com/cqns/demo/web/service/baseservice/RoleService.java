@@ -27,7 +27,12 @@ import javax.annotation.Resource;
 import javax.persistence.criteria.Predicate;
 import java.util.List;
 import java.util.stream.Collectors;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 @Service
 public class RoleService extends AbstractCommonService<Role> {
     private static Logger logger = LoggerFactory.getLogger(RoleService.class);
@@ -85,8 +90,9 @@ public class RoleService extends AbstractCommonService<Role> {
     protected BaseRepository<Role> JpaRepository() {
         return roleRepository;
     }
-
-    //过滤所选择用户已经被选了的角色
+    /**
+     * 过滤所选择用户已经被选了的角色
+     */
     public List<RoleVo> roleVoListForOther(UserRoleVo userRoleVo){
 
         Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
@@ -98,10 +104,11 @@ public class RoleService extends AbstractCommonService<Role> {
                 List<Long> ids = this.userRoleService.userRoleVoList(userRoleVo)
                         .stream().map(UserRoleVo::getRoleId).collect(Collectors.toList());
 
-                if (!Iterables.isEmpty(ids))
+                if (!Iterables.isEmpty(ids)) {
 
                     predicates.add(criteriaBuilder.not(root.get("id").in(ids)));
 
+                }
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

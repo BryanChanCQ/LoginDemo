@@ -114,24 +114,4 @@ public class User {
         this.enabled = enabled;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id &&
-                enabled == user.enabled &&
-                Objects.equals(userName, user.userName) &&
-                Objects.equals(displayName, user.displayName) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(tel, user.tel) &&
-                Objects.equals(email, user.email) &&
-                Objects.equals(orgCode, user.orgCode) &&
-                Objects.equals(lastUpdate, user.lastUpdate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, userName, displayName, password, tel, email, orgCode, lastUpdate, enabled);
-    }
 }

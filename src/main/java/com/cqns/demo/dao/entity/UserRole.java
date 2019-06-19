@@ -2,7 +2,12 @@ package com.cqns.demo.dao.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 @Entity
 @Table(name = "t_user_role", schema = "cqns", catalog = "")
 public class UserRole {
@@ -85,34 +90,4 @@ public class UserRole {
         RawAddTime = rawAddTime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserRole userRole = (UserRole) o;
-
-        if (id != userRole.id) return false;
-        if (UserId != userRole.UserId) return false;
-        if (RoleId != userRole.RoleId) return false;
-        if (UserName != null ? !UserName.equals(userRole.UserName) : userRole.UserName != null) return false;
-        if (RoleName != null ? !RoleName.equals(userRole.RoleName) : userRole.RoleName != null) return false;
-        if (RawUpdateTime != null ? !RawUpdateTime.equals(userRole.RawUpdateTime) : userRole.RawUpdateTime != null)
-            return false;
-        if (RawAddTime != null ? !RawAddTime.equals(userRole.RawAddTime) : userRole.RawAddTime != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (UserId ^ (UserId >>> 32));
-        result = 31 * result + (int) (RoleId ^ (RoleId >>> 32));
-        result = 31 * result + (UserName != null ? UserName.hashCode() : 0);
-        result = 31 * result + (RoleName != null ? RoleName.hashCode() : 0);
-        result = 31 * result + (RawUpdateTime != null ? RawUpdateTime.hashCode() : 0);
-        result = 31 * result + (RawAddTime != null ? RawAddTime.hashCode() : 0);
-        return result;
-    }
 }

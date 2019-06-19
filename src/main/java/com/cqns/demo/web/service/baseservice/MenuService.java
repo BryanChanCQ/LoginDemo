@@ -26,7 +26,12 @@ import javax.persistence.criteria.Predicate;
 import java.util.*;
 
 import java.util.stream.Collectors;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 @Service
 public class MenuService extends AbstractCommonService<Menu> {
     private static Logger logger = LoggerFactory.getLogger(MenuService.class);
@@ -99,7 +104,9 @@ public class MenuService extends AbstractCommonService<Menu> {
         return menuRepository;
     }
 
-    //过滤所选择角色已经被选了的菜单
+    /**
+     * 过滤所选择角色已经被选了的菜单
+     */
     public List<MenuVo> menuVoListForOther(RoleResourceVo roleResourceVo){
 
         Specification specification = (root, criteriaQuery, criteriaBuilder) -> {
@@ -111,10 +118,11 @@ public class MenuService extends AbstractCommonService<Menu> {
                 List<Long> ids = this.roleResourceService.roleResourceVos(roleResourceVo).
                         stream().map(RoleResourceVo::getResourceId).collect(Collectors.toList());
 
-                if (Objects.nonNull(ids) && !ids.isEmpty())
+                if (Objects.nonNull(ids) && !ids.isEmpty()) {
 
                     predicates.add(criteriaBuilder.not(root.get("id").in(ids)));
 
+                }
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));

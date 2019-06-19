@@ -2,7 +2,12 @@ package com.cqns.demo.dao.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 @Entity
 @Table(name = "t_menu", schema = "cqns", catalog = "")
 public class Menu {
@@ -118,40 +123,4 @@ public class Menu {
         RawAddTime = rawAddTime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Menu menu = (Menu) o;
-
-        if (id != menu.id) return false;
-        if (ParentId != menu.ParentId) return false;
-        if (OrderNum != menu.OrderNum) return false;
-        if (Name != null ? !Name.equals(menu.Name) : menu.Name != null) return false;
-        if (ParentName != null ? !ParentName.equals(menu.ParentName) : menu.ParentName != null) return false;
-        if (Icon != null ? !Icon.equals(menu.Icon) : menu.Icon != null) return false;
-        if (Url != null ? !Url.equals(menu.Url) : menu.Url != null) return false;
-        if (Type != null ? !Type.equals(menu.Type) : menu.Type != null) return false;
-        if (RawUpdateTime != null ? !RawUpdateTime.equals(menu.RawUpdateTime) : menu.RawUpdateTime != null)
-            return false;
-        if (RawAddTime != null ? !RawAddTime.equals(menu.RawAddTime) : menu.RawAddTime != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (Name != null ? Name.hashCode() : 0);
-        result = 31 * result + (int) (ParentId ^ (ParentId >>> 32));
-        result = 31 * result + (ParentName != null ? ParentName.hashCode() : 0);
-        result = 31 * result + (Icon != null ? Icon.hashCode() : 0);
-        result = 31 * result + OrderNum;
-        result = 31 * result + (Url != null ? Url.hashCode() : 0);
-        result = 31 * result + (Type != null ? Type.hashCode() : 0);
-        result = 31 * result + (RawUpdateTime != null ? RawUpdateTime.hashCode() : 0);
-        result = 31 * result + (RawAddTime != null ? RawAddTime.hashCode() : 0);
-        return result;
-    }
 }

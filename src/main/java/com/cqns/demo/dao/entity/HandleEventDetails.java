@@ -168,29 +168,4 @@ public class HandleEventDetails {
         this.createdBy = createdBy;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HandleEventDetails that = (HandleEventDetails) o;
-        return id == that.id &&
-                handleEventGroup == that.handleEventGroup &&
-                Objects.equals(eventIdentifier, that.eventIdentifier) &&
-                Objects.equals(eventId, that.eventId) &&
-                Objects.equals(handleEventStaff, that.handleEventStaff) &&
-                Objects.equals(handleCategories, that.handleCategories) &&
-                Objects.equals(handleCondition, that.handleCondition) &&
-                Objects.equals(system, that.system) &&
-                Objects.equals(demand, that.demand) &&
-                Objects.equals(testCover, that.testCover) &&
-                Objects.equals(testExplanation, that.testExplanation) &&
-                Objects.equals(optimizeCategories, that.optimizeCategories) &&
-                Objects.equals(optimizePlan, that.optimizePlan) &&
-                Objects.equals(createdBy, that.createdBy);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, eventIdentifier, eventId, handleEventGroup, handleEventStaff, handleCategories, handleCondition, system, demand, testCover, testExplanation, optimizeCategories, optimizePlan, createdBy);
-    }
 }

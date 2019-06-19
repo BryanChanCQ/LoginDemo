@@ -1,7 +1,12 @@
 package com.cqns.demo.web.vo;
 
 import com.cqns.demo.dao.entity.RoleResource;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 public class RoleResourceVo extends RoleResource {
     private int pageNum = 1;
     private int pageSize = 10;

@@ -2,7 +2,12 @@ package com.cqns.demo.dao.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 @Entity
 @Table(name = "t_role_resource", schema = "cqns", catalog = "")
 public class RoleResource {
@@ -107,39 +112,4 @@ public class RoleResource {
         ResourceTypeName = resourceTypeName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RoleResource that = (RoleResource) o;
-
-        if (id != that.id) return false;
-        if (RoleId != that.RoleId) return false;
-        if (ResourceId != that.ResourceId) return false;
-        if (ResourceType != null ? !ResourceType.equals(that.ResourceType) : that.ResourceType != null) return false;
-        if (ResourceName != null ? !ResourceName.equals(that.ResourceName) : that.ResourceName != null) return false;
-        if (RawUpdateTime != null ? !RawUpdateTime.equals(that.RawUpdateTime) : that.RawUpdateTime != null)
-            return false;
-        if (RawAddTime != null ? !RawAddTime.equals(that.RawAddTime) : that.RawAddTime != null) return false;
-        if (RoleName != null ? !RoleName.equals(that.RoleName) : that.RoleName != null) return false;
-        if (ResourceTypeName != null ? !ResourceTypeName.equals(that.ResourceTypeName) : that.ResourceTypeName != null)
-            return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (int) (RoleId ^ (RoleId >>> 32));
-        result = 31 * result + (int) (ResourceId ^ (ResourceId >>> 32));
-        result = 31 * result + (ResourceType != null ? ResourceType.hashCode() : 0);
-        result = 31 * result + (ResourceName != null ? ResourceName.hashCode() : 0);
-        result = 31 * result + (RawUpdateTime != null ? RawUpdateTime.hashCode() : 0);
-        result = 31 * result + (RawAddTime != null ? RawAddTime.hashCode() : 0);
-        result = 31 * result + (RoleName != null ? RoleName.hashCode() : 0);
-        result = 31 * result + (ResourceTypeName != null ? ResourceTypeName.hashCode() : 0);
-        return result;
-    }
 }

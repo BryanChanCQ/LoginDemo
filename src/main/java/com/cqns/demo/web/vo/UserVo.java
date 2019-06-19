@@ -3,7 +3,12 @@ package com.cqns.demo.web.vo;
 import com.cqns.demo.dao.entity.User;
 
 import java.util.List;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 public class UserVo extends User {
     private int pageNum = 1;
     private int pageSize = 10;

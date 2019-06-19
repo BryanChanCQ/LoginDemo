@@ -46,18 +46,4 @@ public class BranchInfo {
         this.supperBran = supperBran;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        BranchInfo that = (BranchInfo) o;
-        return Objects.equals(branCode, that.branCode) &&
-                Objects.equals(branName, that.branName) &&
-                Objects.equals(supperBran, that.supperBran);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(branCode, branName, supperBran);
-    }
 }

@@ -92,22 +92,4 @@ public class Dictionary {
         this.rawAddTime = rawAddTime;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Dictionary that = (Dictionary) o;
-        return id == that.id &&
-                parentId == that.parentId &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(parentName, that.parentName) &&
-                Objects.equals(key, that.key) &&
-                Objects.equals(rawUpdateTime, that.rawUpdateTime) &&
-                Objects.equals(rawAddTime, that.rawAddTime);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, parentId, parentName, key, rawUpdateTime, rawAddTime);
-    }
 }

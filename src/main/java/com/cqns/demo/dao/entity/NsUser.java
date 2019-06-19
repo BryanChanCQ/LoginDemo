@@ -3,7 +3,12 @@ package com.cqns.demo.dao.entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 public class NsUser extends User {
     private String displayName;
     private Long id;

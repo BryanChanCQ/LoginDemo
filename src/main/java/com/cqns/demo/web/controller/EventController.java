@@ -1,45 +1,25 @@
 package com.cqns.demo.web.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.alibaba.fastjson.util.IOUtils;
 import com.cqns.demo.dao.entity.*;
 import com.cqns.demo.dao.repository.*;
 import com.cqns.demo.utils.JwtTokenUtil;
 import com.cqns.demo.utils.ResultInfo;
 import com.cqns.demo.utils.statusEnum;
-import com.cqns.demo.web.service.baseservice.BranchInfoService;
-import com.cqns.demo.web.service.baseservice.RoleService;
-import com.cqns.demo.web.service.baseservice.UserRoleService;
 import com.cqns.demo.web.service.baseservice.UserService;
 import com.cqns.demo.web.service.eventservice.EventService;
 import com.cqns.demo.web.service.eventservice.HandleEventDetailsService;
 import com.cqns.demo.web.vo.*;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
-import org.activiti.engine.history.HistoricProcessInstance;
-import org.activiti.engine.history.HistoricTaskInstance;
-import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLEncoder;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @Author BryanChan

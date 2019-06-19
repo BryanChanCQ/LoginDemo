@@ -4,7 +4,12 @@ import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 import java.util.List;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 public class ResultInfo<T> implements Serializable {
 
 	private static final long serialVersionUID = -1L;
@@ -128,7 +133,7 @@ public class ResultInfo<T> implements Serializable {
 		this.otherInfoList = otherInfoList;
 		return this;
 	}
-
+    @Override
 	public String toString() {
 		return JSON.toJSONString(this);
 	}

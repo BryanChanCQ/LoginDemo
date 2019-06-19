@@ -6,7 +6,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 public abstract class AbstractCommonService<T> {
     private static Logger logger = LoggerFactory.getLogger(AbstractCommonService.class);
     public boolean insert(T model) {
@@ -40,5 +45,10 @@ public abstract class AbstractCommonService<T> {
     public Optional<T> selectById(Long id) {
         return JpaRepository().findById(id);
     }
+
+    /**
+     * jpa的Repository
+     * @return
+     */
     protected abstract BaseRepository<T> JpaRepository();
 }

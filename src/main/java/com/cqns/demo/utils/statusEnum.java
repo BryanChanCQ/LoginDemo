@@ -1,7 +1,12 @@
 package com.cqns.demo.utils;
-
+/**
+ * @Author BryanChan
+ * @Date 2019-06-12 12:34
+ * @CreatedFor CRCBank
+ * @Version 1.0
+ */
 public enum statusEnum {
-
+    //保存状态
     save("save","已保存"),
 
     submit("submit","已提交"),
