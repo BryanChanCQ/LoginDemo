@@ -17,6 +17,7 @@ public class EventVo extends Event {
     private String showHandleEventStaff;
     private String showPriorityLevel;
     private String showEventType;
+    private String showStatus;
 
     public int getPageNum() {
         return pageNum;
@@ -80,5 +81,13 @@ public class EventVo extends Event {
 
     public void setShowEventType(String showEventType) {
         this.showEventType = showEventType;
+    }
+
+    public String getShowStatus() {
+        return showStatus;
+    }
+
+    public void setShowStatus(String showStatus) {
+        this.showStatus = showStatus;
     }
 }
