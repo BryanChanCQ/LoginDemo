@@ -5,6 +5,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.alibaba.fastjson.util.IOUtils;
 import com.cqns.demo.dao.baserepository.BaseRepository;
 import com.cqns.demo.dao.entity.*;
+import com.cqns.demo.dao.mapper.EventMapper;
 import com.cqns.demo.dao.repository.*;
 import com.cqns.demo.utils.JwtTokenUtil;
 import com.cqns.demo.utils.ResultInfo;
@@ -15,6 +16,8 @@ import com.cqns.demo.web.service.baseservice.UserService;
 import com.cqns.demo.web.vo.BranchInfoVo;
 import com.cqns.demo.web.vo.EventVo;
 import com.cqns.demo.web.vo.HandleEventDetailsVo;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -42,10 +45,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.persistence.criteria.Predicate;
 import javax.servlet.http.HttpServletResponse;
@@ -82,6 +82,8 @@ public class EventService extends AbstractCommonService<Event>{
     private HandleEventDetailsRepository handleEventDetailsRepository;
     @Resource
     private HandleEventDetailsService handleEventDetailsService;
+    @Resource
+    private EventMapper eventMapper;
 
 
 
@@ -181,59 +183,35 @@ public class EventService extends AbstractCommonService<Event>{
 
     }
 
-    public List<EventVo> findDistrubuteToMe() {
-        UserDetails userDetails = JwtTokenUtil.getUser();
+    public PageInfo<EventVo> findDistributeToMe(HashMap map) {
 
-        Preconditions.checkNotNull(userDetails.getUsername(), "用户名不能为空");
+        map.put("assignee", JwtTokenUtil.getUser().getUsername());
 
-        List<Task> tasks = taskService.createTaskQuery().taskAssignee(userDetails.getUsername()).list();
+        PageHelper.startPage((int)map.get("pageNum"), (int)map.get("pageSize"));
 
-        List<Event> events = Lists.newArrayList();
+        List<Event> events = this.eventMapper.findDistributeToMe(map);
 
-        for (Task task : tasks) {
+        PageInfo<Event> pageInfo = new PageInfo<>(events);
 
-            String processInstanceId = taskService.createTaskQuery().taskId(task.getId()).singleResult().getProcessInstanceId();
-
-            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).orderByProcessInstanceId().desc().singleResult();
-
-            //BusinessKey对应启动流程的时候放进去的key,也就是我们的eventId
-            String businessKey = processInstance.getBusinessKey();
-
-            if (Strings.isNullOrEmpty(businessKey)) {
-
-                continue;
-
-            }
-
-            Optional optional = this.selectById(Long.parseLong(businessKey));
-
-            if (optional.isPresent()) {
-
-                events.add((Event) optional.get());
-
-            }
-
-        }
-
-        List<EventVo> eventVos = JSON.parseObject(JSON.toJSONString(events), new TypeReference<List<EventVo>>() {
+        PageInfo<EventVo> pages = JSON.parseObject(JSON.toJSONString(pageInfo), new TypeReference<PageInfo<EventVo>>() {
         }.getType());
 
-        for (EventVo eventVo : eventVos) {
+        for (EventVo eventVo1 : pages.getList()) {
 
-            eventVo.setShowHandleEventGroup(this.branchInfoRepository.findByBranCode(eventVo.getHandleEventGroup()).getBranName());
+            eventVo1.setShowHandleEventGroup(this.branchInfoRepository.findByBranCode(eventVo1.getHandleEventGroup()).getBranName());
 
-            eventVo.setShowHandleEventStaff(this.userService.queryUserByName(eventVo.getHandleEventStaff()).getDisplayName());
+            eventVo1.setShowHandleEventStaff(this.userService.queryUserByName(eventVo1.getHandleEventStaff()).getDisplayName());
 
-            eventVo.setShowPriorityLevel(this.dictionaryRepository.findDictionaryByKey(eventVo.getPriorityLevel()).getName());
+            eventVo1.setShowPriorityLevel(this.dictionaryRepository.findDictionaryByKey(eventVo1.getPriorityLevel()).getName());
 
-            eventVo.setShowEventType(this.dictionaryRepository.findDictionaryByKey(eventVo.getEventType()).getName());
+            eventVo1.setShowEventType(this.dictionaryRepository.findDictionaryByKey(eventVo1.getEventType()).getName());
 
-            eventVo.setShowInstitution(this.branchInfoRepository.findByBranCode(eventVo.getInstitution()).getBranName());
+            eventVo1.setShowInstitution(this.branchInfoRepository.findByBranCode(eventVo1.getInstitution()).getBranName());
 
-            eventVo.setShowStatus(statusEnum.getEnumByKey(eventVo.getStatus()).getValue());
+            eventVo1.setShowStatus(statusEnum.getEnumByKey(eventVo1.getStatus()).getValue());
         }
 
-        return eventVos;
+        return pages;
     }
 
     public void closeProcess(Event event) {
@@ -468,49 +446,35 @@ public class EventService extends AbstractCommonService<Event>{
         return optionResult;
     }
 
-    public List<Optional<EventVo>> getHandleEventHistoryRecord() {
+    public PageInfo<EventVo> getHandleEventHistoryRecord(HashMap map) {
 
-        //根据历史service查询处对应的事件ID也就是说我们的businessKey
-        List<HistoricTaskInstance> historicTaskInstanceList = historyService.createHistoricTaskInstanceQuery()
-                .taskAssignee(JwtTokenUtil.getUser().getUsername()).list();
+        map.put("assignee", JwtTokenUtil.getUser().getUsername());
 
-        List<Long> historyEventIds = Lists.newArrayList();
+        PageHelper.startPage((int)map.get("pageNum"), (int)map.get("pageSize"));
 
-        for (HistoricTaskInstance historicTaskInstance : historicTaskInstanceList) {
+        List<Event> events = this.eventMapper.getHandleEventHistoryRecord(map);
 
-            HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
-                    .processInstanceId(historicTaskInstance.getProcessInstanceId())
-                    .orderByProcessInstanceId().desc().singleResult();
+        PageInfo<Event> pageInfo = new PageInfo<>(events);
 
-            if (!Strings.isNullOrEmpty(historicProcessInstance.getBusinessKey())) {
-
-                historyEventIds.add(Long.valueOf(historicProcessInstance.getBusinessKey()));
-
-            }
-
-        }
-
-        List<Optional<Event>> events = historyEventIds.stream().distinct()
-                .map(this::selectById)
-                .filter(Optional::isPresent).collect(Collectors.toList());
-
-        List<Optional<EventVo>> eventVos = JSON.parseObject(JSON.toJSONString(events), new TypeReference<List<Optional<EventVo>>>() {
+        PageInfo<EventVo> pages = JSON.parseObject(JSON.toJSONString(pageInfo), new TypeReference<PageInfo<EventVo>>() {
         }.getType());
 
-        for (Optional<EventVo> optional : eventVos){
+        for (EventVo eventVo : pages.getList()){
 
-            optional.get().setShowInstitution(this.branchInfoRepository.findByBranCode(optional.get().getInstitution()).getBranName());
+            eventVo.setShowInstitution(this.branchInfoRepository.findByBranCode(eventVo.getInstitution()).getBranName());
 
-            optional.get().setShowHandleEventGroup(this.branchInfoRepository.findByBranCode(optional.get().getHandleEventGroup()).getBranName());
+            eventVo.setShowHandleEventGroup(this.branchInfoRepository.findByBranCode(eventVo.getHandleEventGroup()).getBranName());
 
-            optional.get().setShowHandleEventStaff(this.userService.queryUserByName(optional.get().getHandleEventStaff()).getDisplayName());
+            eventVo.setShowHandleEventStaff(this.userService.queryUserByName(eventVo.getHandleEventStaff()).getDisplayName());
 
-            optional.get().setShowPriorityLevel(this.dictionaryRepository.findDictionaryByKey(optional.get().getPriorityLevel()).getName());
+            eventVo.setShowPriorityLevel(this.dictionaryRepository.findDictionaryByKey(eventVo.getPriorityLevel()).getName());
 
-            optional.get().setShowStatus(statusEnum.getEnumByKey(optional.get().getStatus()).getValue());
+            eventVo.setShowEventType(this.dictionaryRepository.findDictionaryByKey(eventVo.getEventType()).getName());
+
+            eventVo.setShowStatus(statusEnum.getEnumByKey(eventVo.getStatus()).getValue());
         }
 
-        return eventVos;
+        return pages;
     }
 
     public List queryHandleEventDetails(String eventIdentifier, String handleEventStaff) {
@@ -568,6 +532,14 @@ public class EventService extends AbstractCommonService<Event>{
         handleEventDetailsVo.setShowTestCover(this.dictionaryRepository.findDictionaryByKey(handleEventDetailsVo.getTestCover()).getName());
 
         return handleEventDetailsVo;
+    }
+
+    public List<BranchInfo> queryAllGroup() {
+        return this.branchInfoRepository.findAll();
+    }
+
+    public List<User> queryAllStaff() {
+        return this.userRepository.findAll();
     }
 
     @Override

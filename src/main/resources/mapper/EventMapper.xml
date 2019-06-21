@@ -106,4 +106,117 @@
     f_update_By
     from t_event
   </select>
+
+  <select id="getHandleEventHistoryRecord" parameterType="HashMap" resultMap="BaseResultMap">
+    SELECT
+        te.*
+    FROM
+        t_event te
+    WHERE
+        te.id IN (
+        SELECT
+            DISTINCT ahp.BUSINESS_KEY_
+        FROM act_hi_taskinst aht
+            RIGHT JOIN act_hi_procinst ahp
+            ON ahp.ID_ = aht.PROC_INST_ID_
+        WHERE
+          1 = 1
+        <if test="assignee != null and assignee != ''">
+          and aht.ASSIGNEE_ = #{assignee}
+        </if>
+        )
+        <if test="eventType != null and eventType != ''">
+          and te.f_event_type = #{eventType}
+        </if>
+        <if test="eventIdentifier != null and eventIdentifier != ''">
+          and te.f_event_identifier = #{eventIdentifier}
+        </if>
+        <if test="eventTitle != null and eventTitle != ''">
+          and te.f_event_title like "%"#{eventTitle}"%"
+        </if>
+        <if test="contact != null and contact != ''">
+          and te.f_contact like "%"#{contact}"%"
+        </if>
+        <if test="eventContactor != null and eventContactor != ''">
+          and te.f_event_contactor like "%"#{eventContactor}"%"
+       </if>
+        <if test="institution != null and institution != ''">
+          and te.f_institution = #{institution}
+        </if>
+        <if test="eventCreateDate != null and eventCreateDate != ''">
+          and te.f_event_create_date like "%"#{eventCreateDate}"%"
+        </if>
+        <if test="description != null and description != ''">
+          and te.f_description like "%"#{description}"%"
+        </if>
+        <if test="priorityLevel != null and priorityLevel != ''">
+          and te.f_priority_level = #{priorityLevel}
+        </if>
+        <if test="handleEventGroup != null and handleEventGroup != ''">
+          and te.f_handle_event_group = #{handleEventGroup}
+        </if>
+        <if test="handleEventStaff != null and handleEventStaff != ''">
+          and te.f_handle_event_staff = #{handleEventStaff}
+        </if>
+        <if test="status != null and status != ''">
+          and te.f_status = #{status}
+        </if>
+  </select>
+
+    <select id="findDistributeToMe" parameterType="HashMap" resultMap="BaseResultMap">
+        SELECT
+        te.*
+        FROM
+        t_event te
+        WHERE
+        te.id IN (
+        SELECT
+           DISTINCT are.BUSINESS_KEY_
+        FROM act_ru_task art
+           RIGHT JOIN act_ru_execution are
+           ON art.PROC_INST_ID_ = are.ID_
+        WHERE
+        1 = 1
+        <if test="assignee != null and assignee != ''">
+            and art.ASSIGNEE_ = #{assignee}
+        </if>
+        )
+        <if test="eventType != null and eventType != ''">
+            and te.f_event_type = #{eventType}
+        </if>
+        <if test="eventIdentifier != null and eventIdentifier != ''">
+            and te.f_event_identifier = #{eventIdentifier}
+        </if>
+        <if test="eventTitle != null and eventTitle != ''">
+            and te.f_event_title like "%"#{eventTitle}"%"
+        </if>
+        <if test="contact != null and contact != ''">
+            and te.f_contact like "%"#{contact}"%"
+        </if>
+        <if test="eventContactor != null and eventContactor != ''">
+            and te.f_event_contactor like "%"#{eventContactor}"%"
+        </if>
+        <if test="institution != null and institution != ''">
+            and te.f_institution = #{institution}
+        </if>
+        <if test="eventCreateDate != null and eventCreateDate != ''">
+            and te.f_event_create_date like "%"#{eventCreateDate}"%"
+        </if>
+        <if test="description != null and description != ''">
+            and te.f_description like "%"#{description}"%"
+        </if>
+        <if test="priorityLevel != null and priorityLevel != ''">
+            and te.f_priority_level = #{priorityLevel}
+        </if>
+        <if test="handleEventGroup != null and handleEventGroup != ''">
+            and te.f_handle_event_group = #{handleEventGroup}
+        </if>
+        <if test="handleEventStaff != null and handleEventStaff != ''">
+            and te.f_handle_event_staff = #{handleEventStaff}
+        </if>
+        <if test="status != null and status != ''">
+            and te.f_status = #{status}
+        </if>
+    </select>
+
 </mapper>

@@ -135,7 +135,7 @@ public class UserRoleService extends AbstractCommonService<UserRole> {
     
     public List<UserRole> searchUserRole(Long id) {
 
-    	return this.userRoleRepository.findByRoleId(id);
+    	return this.userRoleRepository.findByUserId(id);
 
     }
 }

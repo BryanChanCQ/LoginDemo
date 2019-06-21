@@ -9,6 +9,7 @@ import com.cqns.demo.web.service.baseservice.UserService;
 import com.cqns.demo.web.service.eventservice.EventService;
 import com.cqns.demo.web.service.eventservice.HandleEventDetailsService;
 import com.cqns.demo.web.vo.*;
+import com.github.pagehelper.PageInfo;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,10 +99,10 @@ public class EventController {
 
     }
 
-    @RequestMapping(value = "/find", method = RequestMethod.GET)
-    public ResultInfo<List> find() {
+    @RequestMapping(value = "/find", method = RequestMethod.POST)
+    public ResultInfo<PageInfo> find(@RequestBody HashMap map) {
 
-        return ResultInfo.create(List.class).success(this.eventService.findDistrubuteToMe());
+        return ResultInfo.create(PageInfo.class).success(this.eventService.findDistributeToMe(map));
 
     }
 
@@ -267,11 +268,11 @@ public class EventController {
                 .success(this.eventService.getCurrentOptionResult());
     }
 
-    @RequestMapping(value = "/getHandleEventHistoryRecord", method = RequestMethod.GET)
-    public ResultInfo<List> getHandleEventHistoryRecord() {
+    @RequestMapping(value = "/getHandleEventHistoryRecord", method = RequestMethod.POST)
+    public ResultInfo<PageInfo> getHandleEventHistoryRecord(@RequestBody HashMap map) {
 
-        return ResultInfo.create(List.class)
-                .success(this.eventService.getHandleEventHistoryRecord());
+        return ResultInfo.create(PageInfo.class)
+                .success(this.eventService.getHandleEventHistoryRecord(map));
     }
 
     @RequestMapping(value = "/saveDetail", method = RequestMethod.POST)
@@ -296,6 +297,20 @@ public class EventController {
 
         return ResultInfo.create(HandleEventDetailsVo.class)
                 .success(this.eventService.queryHandleEventDetailsById(id));
+    }
+
+    @RequestMapping(value = "/queryAllGroup", method = RequestMethod.GET)
+    public ResultInfo<List> queryAllGroup() {
+
+        return ResultInfo.create(List.class)
+                .success(this.eventService.queryAllGroup());
+    }
+
+    @RequestMapping(value = "/queryAllStaff", method = RequestMethod.GET)
+    public ResultInfo<List> queryAllStaff() {
+
+        return ResultInfo.create(List.class)
+                .success(this.eventService.queryAllStaff());
     }
 
 }

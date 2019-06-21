@@ -1,6 +1,9 @@
 package com.cqns.demo.dao.mapper;
 
 import com.cqns.demo.dao.entity.Event;
+import com.cqns.demo.web.vo.EventVo;
+
+import java.util.HashMap;
 import java.util.List;
 /**
  * @Author BryanChan
@@ -42,4 +45,18 @@ public interface EventMapper {
      * @return
      */
     int updateByPrimaryKey(Event record);
+
+    /**
+     * 查询事件历史处理结果
+     * @param map
+     * @return
+     */
+    List<Event> getHandleEventHistoryRecord(HashMap map);
+
+    /**
+     * 查询分配给我的事件
+     * @param map
+     * @return
+     */
+    List<Event> findDistributeToMe(HashMap map);
 }
